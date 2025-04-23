@@ -25,7 +25,7 @@ const Support = () => {
       branchCode: "4575467",
       branchCity: "New York",
       city: "Us",
-      image: "https://via.placeholder.com/40",
+      image: "http://10.0.60.189:5000/uploads/360_F_238084232_5XhGUddDZezzJxybvVXzfPp8cOKAuqRp.jpg",
     },
   ];
 
@@ -167,6 +167,9 @@ const Support = () => {
           </div>
         )}
       </Modal>
+
+
+     
       <ReplyUser
         setOpenAddModal={setOpenAddModal}
         openAddModal={openAddModal}
