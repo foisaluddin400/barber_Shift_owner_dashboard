@@ -30,6 +30,8 @@ import Administrator from "../page/administrator/Administrator";
 import AdPromotional from "../page/adpromotion/AdPromotional";
 import AllShopRegistration from "../components/Dashboard/AllShopRegistration";
 import Support from "../page/support/Support";
+import BookHistory from "../page/bookHistory/BookHistory";
+import { Transaction } from "../page/transaction/Transaction";
 
 
 
@@ -86,6 +88,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/barber",
         element: <Barber></Barber>
+      },
+      {
+        path: "/dashboard/bookingHistory",
+        element: <BookHistory></BookHistory>
+      },
+      {
+        path: "/dashboard/transaction",
+        element: <Transaction></Transaction>
       },
       {
         path: "/dashboard/barber/barberDetails",

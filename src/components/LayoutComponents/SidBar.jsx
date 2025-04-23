@@ -19,12 +19,12 @@ const items = [
     icon: <LuLayoutDashboard />,
     link: "/",
   },
-  {
-    key: "barberOwner",
-    label: "Barber owner",
-    icon: <FaUserTie />,
-    link: "/dashboard/barberOwner",
-  },
+  // {
+  //   key: "barberOwner",
+  //   label: "Barber owner",
+  //   icon: <FaUserTie />,
+  //   link: "/dashboard/barberOwner",
+  // },
 
   {
     key: "customer",
@@ -55,6 +55,18 @@ const items = [
     label: "Barber",
     icon: <IoMdCut />,
     link: "/dashboard/barber",
+  },
+  {
+    key: "history",
+    label: "Booking History",
+    icon: <IoMdCut />,
+    link: "/dashboard/bookingHistory",
+  },
+  {
+    key: "transaction",
+    label: "Transaction",
+    icon: <IoMdCut />,
+    link: "/dashboard/transaction",
   },
   {
     key: "adPromotion",

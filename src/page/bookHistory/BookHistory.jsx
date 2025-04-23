@@ -1,23 +1,76 @@
 import React, { useState } from "react";
-import { Table, Button, Modal } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { Table, Button, Modal, Input, Dropdown } from "antd";
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { BiMessageRoundedDots } from "react-icons/bi";
 import { RxCrossCircled } from "react-icons/rx";
+import { Navigate } from "../../Navigate";
+import { IoIosArrowDown } from "react-icons/io";
 
-const ShopRegistration = () => {
+const BookHistory = () => {
     const [open, setOpen] = useState(false);
     const [selectedShop, setSelectedShop] = useState(null);
 
+    const items = [
+        {
+          label: (
+            <button target="_blank" rel="noopener noreferrer">
+              Upcoming Booking
+            </button>
+          ),
+          key: "0",
+        },
+        {
+          label: (
+            <button target="_blank" rel="noopener noreferrer">
+              Cancel
+            </button>
+          ),
+          key: "1",
+        },
+        {
+          label: (
+            <button target="_blank" rel="noopener noreferrer">
+              Completed
+            </button>
+          ),
+          key: "2",
+        },
+        {
+            label: (
+              <button target="_blank" rel="noopener noreferrer">
+                No-Show Fee
+              </button>
+            ),
+            key: "3",
+          },
+      ];
     const dataSource = [
         {
             key: "1",
             shopName: "Cameron Salons",
             address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
-            genderCategory: "Male",
-            category: "Skin care",
-            ownerName: "Mike Smith",
+         
+            email: "sadgfjdg@gmail.com",
+            phone: "+3489 9999 9778",
+            date: '01/4/2025',
+            bankName: "AB Bank",
+            accountHolder: "Dianne Russell",
+            accountNumber: "6575675678676",
+            branchCode: "4575467",
+            service:'harcut',
+            branchCity: "New York",
+            assigned: 'talha',
+            status: 'Confirmed',
+            city:"Us",
+            image: "https://via.placeholder.com/40" 
+        },
+        {
+            key: "2",
+            shopName: "Cameron Salons",
+            address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+         
             email: "sadgfjdg@gmail.com",
             phone: "+3489 9999 9778",
             date: '01/4/2025',
@@ -96,11 +149,34 @@ const ShopRegistration = () => {
     ];
     
     return (
-        <div className="p-3 bg-white mt-4">
-            <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold pb-2">Recent Booking Request</h2>
-                <Link to={'/dashboard/allShop'}><button className="text-[#AB684D]">View all</button></Link>
-            </div>
+        <div className=" p-1">
+           <div className="flex justify-between">
+                     <div className="flex ">
+                       <Navigate title={"Booking History"}></Navigate>
+                       <h1 className=" pl-2 font-semibold text-xl">{`(110)`}</h1>
+                     </div>
+                     <Input
+                       placeholder="Search"
+                       prefix={<SearchOutlined />}
+                       className="w-64 px-4 py-2 rounded-lg bg-white"
+                     />
+                   </div>
+                   <div className="flex justify-between items-center mb-4">
+            <Dropdown
+              menu={{
+                items,
+              }}
+              trigger={["click"]}
+            >
+              <button
+                className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
+                onClick={(e) => e.preventDefault()}
+              >
+                Upcoming Booking
+                <IoIosArrowDown />
+              </button>
+            </Dropdown>
+          </div>
             <Table dataSource={dataSource} columns={columns} pagination={false} />
             
             
@@ -108,4 +184,4 @@ const ShopRegistration = () => {
     );
 };
 
-export default ShopRegistration;
+export default BookHistory;

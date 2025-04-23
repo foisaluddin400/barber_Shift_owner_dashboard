@@ -36,7 +36,7 @@ const Support = () => {
       key: "key",
     },
     {
-      title: "Shop Name",
+      title: "Name",
       dataIndex: "shopName",
       key: "shopName",
       render: (text, record) => (
@@ -56,11 +56,7 @@ const Support = () => {
       dataIndex: "city",
       key: "city",
     },
-    {
-      title: "Shop Category",
-      dataIndex: "category",
-      key: "category",
-    },
+    
     {
       title: "Action",
       key: "action",
