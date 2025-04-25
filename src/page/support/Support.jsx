@@ -101,7 +101,7 @@ const Support = () => {
   ];
 
   return (
-    <div className="p-3 bg-white mt-4">
+    <div className="p-1">
       <div className="flex justify-between mb-4">
         <Navigate title={"Support"} />
         <Input

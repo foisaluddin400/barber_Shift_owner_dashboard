@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
 
-const EditPromotionModal = ({ editModal, setEditModal }) => {
+const EditServices = ({ editModal, setEditModal }) => {
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState([]);
   
@@ -117,4 +117,4 @@ const EditPromotionModal = ({ editModal, setEditModal }) => {
     );
 }
 
-export default EditPromotionModal
+export default EditServices

@@ -39,18 +39,6 @@ const items = [
     link: "/dashboard/userReport",
   },
   {
-    key: "premium",
-    label: "Premium Subscribers",
-    icon: <MdOutlineWorkspacePremium />,
-    link: "/dashboard/premiumSubscribers",
-  },
-  {
-    key: "admin",
-    label: "Administrator",
-    icon: <RiShieldUserLine />,
-    link: "/dashboard/admin",
-  },
-  {
     key: "barber",
     label: "Barber",
     icon: <IoMdCut />,
@@ -63,24 +51,18 @@ const items = [
     link: "/dashboard/bookingHistory",
   },
   {
+    key: "service",
+    label: "service",
+    icon: <IoMdCut />,
+    link: "/dashboard/services",
+  },
+  {
     key: "transaction",
     label: "Transaction",
     icon: <IoMdCut />,
     link: "/dashboard/transaction",
   },
-  {
-    key: "adPromotion",
-    label: "Ad Promotional",
-    icon: <FaUserAstronaut />,
-    link: "/dashboard/adPromotion",
-  },
-  
-  {
-    key: "subscription",
-    label: "Subscription",
-    icon: <BsSubstack />,
-    link: "/dashboard/subscription",
-  },
+
   {
     key: "support",
     label: "Support",
