@@ -10,7 +10,7 @@ import create from "../../assets/routerImg/create.png";
 import settings from "../../assets/routerImg/settings.png";
 import subscription from "../../assets/routerImg/subscription.png";
 import user from "../../assets/routerImg/user.png";
-import logo from "../../assets/header/logo.png";
+import logo from "../../assets/logo.png";
 
 import { FaChevronRight } from "react-icons/fa";
 import { IoIosLogIn, IoMdCut } from "react-icons/io";
@@ -175,7 +175,7 @@ const Header = () => {
             >
               <div className="bg-[#AB684D] custom-sidebar h-[100vh] -m-6">
                 <div className="custom-sidebar-logo flex justify-center ">
-                  <img src={logo} alt="Logo" className="w-[160px]" />
+                  <img src={logo} alt="Logo" className="w-[40px]" />
                 </div>
 
                 <div className="menu-items">
