@@ -8,9 +8,11 @@ import { useDispatch } from "react-redux";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { TbUserCircle } from "react-icons/tb";
 import { MdOutlineReport, MdOutlineSettings, MdOutlineWorkspacePremium } from "react-icons/md";
-import { RiShieldUserLine } from "react-icons/ri";
+import { RiBookletLine, RiShieldUserLine } from "react-icons/ri";
 import { BsSubstack } from "react-icons/bs";
 import { HiSupport } from "react-icons/hi";
+import { LiaUserTieSolid } from "react-icons/lia";
+import { CiCoinInsert } from "react-icons/ci";
 
 const items = [
   {
@@ -47,19 +49,19 @@ const items = [
   {
     key: "history",
     label: "Booking History",
-    icon: <IoMdCut />,
+    icon: <RiBookletLine />,
     link: "/dashboard/bookingHistory",
   },
   {
     key: "service",
     label: "service",
-    icon: <IoMdCut />,
+    icon: <LiaUserTieSolid />,
     link: "/dashboard/services",
   },
   {
     key: "transaction",
     label: "Transaction",
-    icon: <IoMdCut />,
+    icon: <CiCoinInsert />,
     link: "/dashboard/transaction",
   },
 

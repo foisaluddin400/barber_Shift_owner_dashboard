@@ -17,11 +17,11 @@ const Dashboard = () => {
         </div>
         
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="lg:grid grid-cols-2 gap-4">
         <div className="bg-white rounded p-3">
           <SubscriptionGrowth></SubscriptionGrowth>
         </div>
-        <div className="bg-white rounded">
+        <div className="bg-white rounded mt-3 lg:mt-0">
           <UserGrowth></UserGrowth>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { LuBell } from "react-icons/lu";
+import { LuBell, LuLayoutDashboard } from "react-icons/lu";
 import profilee from "../../../src/assets/header/profileLogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
@@ -13,54 +13,74 @@ import user from "../../assets/routerImg/user.png";
 import logo from "../../assets/header/logo.png";
 
 import { FaChevronRight } from "react-icons/fa";
-import { IoIosLogIn } from "react-icons/io";
+import { IoIosLogIn, IoMdCut } from "react-icons/io";
+import { TbUserCircle } from "react-icons/tb";
+import { MdOutlineReport, MdOutlineSettings } from "react-icons/md";
+import { RiBookletLine } from "react-icons/ri";
+import { LiaUserTieSolid } from "react-icons/lia";
+import { CiCoinInsert } from "react-icons/ci";
+import { HiSupport } from "react-icons/hi";
 const items = [
   {
     key: "dashboard",
     label: "Dashboard",
-    icon: dashboard,
+    icon: <LuLayoutDashboard />,
     link: "/",
   },
+  // {
+  //   key: "barberOwner",
+  //   label: "Barber owner",
+  //   icon: <FaUserTie />,
+  //   link: "/dashboard/barberOwner",
+  // },
+
   {
-    key: "userManagement",
-    label: "User Management",
-    icon: user,
-    link: "/dashboard/UserManagement",
+    key: "customer",
+    label: "Customer",
+    icon: <TbUserCircle />,
+    link: "/dashboard/customer",
   },
   {
-    key: "creatorManagement",
-    label: "Creator Management",
-    icon: create,
-    link: "/dashboard/CreatorManagement",
+    key: "report",
+    label: "User Report",
+    icon: <MdOutlineReport />,
+    link: "/dashboard/userReport",
   },
   {
-    key: "categoriesManagement",
-    label: "Categories Management",
-    icon: categorie,
-    link: "/dashboard/CategoriesManagement/Categories",
-    children: [
-      {
-        key: "categoriesManagement",
-        label: "Categories",
-        link: "/dashboard/CategoriesManagement/Categories",
-      },
-      {
-        key: "subcategory",
-        label: "Subcategory",
-        link: "/dashboard/CategoriesManagement/Subcategory",
-      },
-    ],
+    key: "barber",
+    label: "Barber",
+    icon: <IoMdCut />,
+    link: "/dashboard/barber",
   },
   {
-    key: "subscription",
-    label: "Subscription",
-    icon: subscription,
-    link: "/dashboard/Subscription",
+    key: "history",
+    label: "Booking History",
+    icon: <RiBookletLine />,
+    link: "/dashboard/bookingHistory",
   },
   {
-    key: "profile",
+    key: "service",
+    label: "service",
+    icon: <LiaUserTieSolid />,
+    link: "/dashboard/services",
+  },
+  {
+    key: "transaction",
+    label: "Transaction",
+    icon: <CiCoinInsert />,
+    link: "/dashboard/transaction",
+  },
+
+  {
+    key: "support",
+    label: "Support",
+    icon: <HiSupport />,
+    link: "/dashboard/support",
+  },
+  {
+    key: "settings",
     label: "Settings",
-    icon: settings,
+    icon: <MdOutlineSettings />,
     link: "/dashboard/Settings/profile",
     children: [
       {
@@ -83,6 +103,7 @@ const items = [
         label: "FAQ",
         link: "/dashboard/Settings/FAQ",
       },
+      
     ],
   },
 ];
@@ -122,7 +143,7 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <div className="bg-[#AB684D] text-white pt-5">
+    <div className="bg-[#AB684D]  text-white pt-5">
       <div className="flex justify-between">
         <div className="lg:hidden ">
           <div className="py-3 pl-4">
@@ -152,7 +173,7 @@ const Header = () => {
               open={open}
               key={placement}
             >
-              <div className="bg-black h-screen -m-6">
+              <div className="bg-[#AB684D] custom-sidebar h-[100vh] -m-6">
                 <div className="custom-sidebar-logo flex justify-center ">
                   <img src={logo} alt="Logo" className="w-[160px]" />
                 </div>
@@ -164,8 +185,8 @@ const Header = () => {
                         to={item.link}
                         className={`menu-item my-4 mx-5 py-3 px-3 flex items-center cursor-pointer ${
                           selectedKey === item.key
-                            ? "bg-[#EDC4C5] rounded-md"
-                            : "bg-white rounded-md hover:bg-gray-200"
+                           ? "bg-[#D17C51] text-[white] rounded-tr-md rounded-br-md"
+                    : "bg-white text-[#AB684D] rounded-tr-md rounded-br-md hover:bg-gray-200"
                         }`}
                         onClick={(e) => {
                           if (item.children) {
@@ -177,11 +198,7 @@ const Header = () => {
                           }
                         }}
                       >
-                        <img
-                          src={item.icon}
-                          alt={item.label}
-                          className="w-5 h-5 mr-3"
-                        />
+                       <h1 className="mr-3">{item.icon}</h1>
                         <span className="block w-full text-black">
                           {item.label}
                         </span>
@@ -216,8 +233,8 @@ const Header = () => {
                               to={child.link}
                               className={`menu-item p-4  flex items-center cursor-pointer ${
                                 selectedKey === child.key
-                                  ? "bg-[#EDC4C5]"
-                                  : "hover:bg-gray-200"
+                                     ? "bg-[#D17C51] text-white"
+                          : "hover:bg-gray-200"
                               }`}
                               onClick={() => {
                                 setSelectedKey(child.key); 
@@ -237,7 +254,7 @@ const Header = () => {
                 </div>
 
                
-                <div className="custom-sidebar-footer absolute bottom-0 w-full p-4 ">
+                <div className=" w-full p-4 ">
                   <button
                     onClick={handleLogout}
                     className="w-full flex bg-white text-start rounded-md text-black p-3"

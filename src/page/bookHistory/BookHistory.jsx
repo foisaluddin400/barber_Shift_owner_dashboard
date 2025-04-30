@@ -176,7 +176,7 @@ const BookHistory = () => {
           </button>
         </Dropdown>
       </div>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
+      <Table dataSource={dataSource} columns={columns} pagination={false} scroll={{ x: 800 }} />
     </div>
   );
 };

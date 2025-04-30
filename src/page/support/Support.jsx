@@ -110,7 +110,7 @@ const Support = () => {
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
+      <Table dataSource={dataSource} columns={columns} pagination={false} scroll={{ x: 800 }} />
 
       <Modal
         title="Shop Details"
