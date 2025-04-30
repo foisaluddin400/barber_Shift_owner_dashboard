@@ -2,7 +2,7 @@ import { Form, Modal, Upload, DatePicker, TimePicker, Input } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 
-
+//adf
 const EditServices = ({ editModal, setEditModal }) => {
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState([]);
