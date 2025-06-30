@@ -32,7 +32,7 @@ const Services = () => {
   return (
     <div className="p-1">
       <div className="flex justify-between mb-4 ">
-        <Navigate title={"Customers"} />
+        <Navigate title={"Services"} />
         <Input
           placeholder="Search"
           prefix={<SearchOutlined />}

@@ -7,32 +7,32 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 export const Barber = () => {
-  const items = [
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Blocked
-        </button>
-      ),
-      key: "0",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Active
-        </button>
-      ),
-      key: "1",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          All Customers
-        </button>
-      ),
-      key: "2",
-    },
-  ];
+  // const items = [
+  //   {
+  //     label: (
+  //       <button target="_blank" rel="noopener noreferrer">
+  //         Blocked
+  //       </button>
+  //     ),
+  //     key: "0",
+  //   },
+  //   {
+  //     label: (
+  //       <button target="_blank" rel="noopener noreferrer">
+  //         Active
+  //       </button>
+  //     ),
+  //     key: "1",
+  //   },
+  //   {
+  //     label: (
+  //       <button target="_blank" rel="noopener noreferrer">
+  //         All Customers
+  //       </button>
+  //     ),
+  //     key: "2",
+  //   },
+  // ];
 
   const columns = [
     {
@@ -68,7 +68,7 @@ export const Barber = () => {
       key: "contact",
     },
     {
-      title: "Sales",
+      title: "Salary",
       dataIndex: "sales",
       key: "sales",
     },
@@ -114,7 +114,7 @@ export const Barber = () => {
       <div className="p-1">
         <div className="flex justify-between">
           <div className="flex ">
-            <Navigate title={"Customers"}></Navigate>
+            <Navigate title={"Barber"}></Navigate>
             <h1 className=" pl-2 font-semibold text-xl">{`(110)`}</h1>
           </div>
           <Input
@@ -126,20 +126,20 @@ export const Barber = () => {
         {/* Filter and Search */}
         <div className=" p-2">
           <div className="flex justify-between items-center mb-4">
-            <Dropdown
-              menu={{
-                items,
-              }}
-              trigger={["click"]}
-            >
+            {/* <Dropdown
+              // menu={{
+              //   items,
+              // }}
+              // trigger={["click"]}
+            > */}
               <button
                 className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-                onClick={(e) => e.preventDefault()}
+                // onClick={(e) => e.preventDefault()}
               >
-                All Customers
+                All Barber
                 <IoIosArrowDown />
               </button>
-            </Dropdown>
+            {/* </Dropdown> */}
           </div>
 
           {/* Table */}

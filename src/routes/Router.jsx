@@ -23,6 +23,7 @@ import BookHistory from "../page/bookHistory/BookHistory";
 import { Transaction } from "../page/transaction/Transaction";
 import Services from "../page/services/Services";
 import ChatBox from "../page/chat/ChatBox";
+import ShedualManagement from "../page/shedualManagement/ShedualManagement";
 
 
 
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/services",
         element: <Services></Services>
+      },
+      {
+        path: "/dashboard/schedualManagement",
+        element: <ShedualManagement></ShedualManagement>
       },
       {
         path: "/dashboard/transaction",

@@ -52,6 +52,12 @@ const items = [
     icon: <RiBookletLine />,
     link: "/dashboard/bookingHistory",
   },
+    {
+    key: "schedual",
+    label: "Schedule Management",
+    icon: <CiCoinInsert />,
+    link: "/dashboard/schedualManagement",
+  },
   {
     key: "service",
     label: "service",

@@ -51,8 +51,8 @@ const UserReport = () => {
       dataIndex: "action",
       render: () => (
         <div className="flex gap-2">
-          <button onClick={() => setOpenAddModal(true)} className="bg-red-500 border px-4 py-1 rounded">Reply</button>
-          <button className="bg-green-600 px-4 py-1 border rounded">Argon</button>
+          <button onClick={() => setOpenAddModal(true)} className="bg-[#D17C51] border text-white px-4 py-1 rounded">Reply</button>
+          <button className="bg-[#D15151] text-white px-4 py-1 border rounded">Argon</button>
         </div>
       ),
     }
@@ -138,16 +138,7 @@ const UserReport = () => {
       </div>
 
       <div className="p-2">
-        <div className="flex justify-between items-center mb-4">
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <button
-              className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-              onClick={(e) => e.preventDefault()}
-            >
-              All Customers <IoIosArrowDown />
-            </button>
-          </Dropdown>
-        </div>
+      
 
         <div className="rounded-md overflow-hidden">
           <Table
