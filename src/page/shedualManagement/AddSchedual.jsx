@@ -2,6 +2,7 @@ import { Form, Modal, Upload, DatePicker, TimePicker, Input } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+const format = "HH:mm";
 const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
   const [form] = Form.useForm();
   const handleCancel = () => {
@@ -25,7 +26,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
       >
         <div className="mb-6 mt-2">
           <h2 className="text-center font-semibold text-xl mb-4">
-            New Booking
+            New Schedule
           </h2>
 
           <Form
@@ -34,43 +35,57 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
             onFinish={handleSubmit}
             className="px-2"
           >
-            <Form.Item label='Customer Name' name="name" className="mb-0">
+            <Form.Item label="Barber Name" name="name" className="mb-4">
               <Input
-                placeholder="Input Customer name"
+                placeholder="Barber Name"
                 className="w-full"
                 style={{ height: 40 }}
               />
             </Form.Item>
 
-            <Form.Item label='Service' name="service" className="mb-0">
-              <Input
-                placeholder="input Service"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <Form.Item label="Working hours" name="Working" className="mb-0">
+                <TimePicker
+                  className="w-full"
+                  defaultValue={dayjs("12:08", format)}
+                  format={format}
+                />
+              </Form.Item>
+              <Form.Item label="Break Times" name="break" className="mb-0">
+                <TimePicker
+                  className="w-full"
+                  defaultValue={dayjs("12:08", format)}
+                  format={format}
+                />
+              </Form.Item>
+            </div>
 
-            <Form.Item label='Assign Barber' name="assign" className="mb-0">
-              <Input
-                placeholder="input assign"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
            
 
             {/* Date, Time, Duration */}
-           
-              <Form.Item label='Schedule Date & Time' name="date" className="mb-0">
-                <DatePicker
-                  placeholder="Enter Date"
-                  className="w-full"
-                  style={{ height: 40 }}
-                />
-              </Form.Item>
-            
 
-      
+  <Form.Item
+              label="Real-time Availability"
+              name="Availability"
+              className="mb-4"
+            >
+              <DatePicker
+                placeholder="Real-time Availability"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Special Dates"
+              name="Special"
+              className="mb-0"
+            >
+              <DatePicker
+                placeholder="Special Dates"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+            </Form.Item>
 
             <button
               type="submit"

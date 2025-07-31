@@ -39,11 +39,11 @@ const ShedualManagement = () => {
     {
       key: "1",
       shopName: "Cameron Salons",
-      address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+      workingHours: "9:00 AM - 6:00 PM",
 
-      email: "sadgfjdg@gmail.com",
-      phone: "+3489 9999 9778",
-      date: "01/4/2025",
+      breakTimes: "1:00 PM - 2:00 PM",
+      realTimeAvailability: "Available",
+      specialDates: "Public holidays",
       bankName: "AB Bank",
       accountHolder: "Dianne Russell",
       accountNumber: "6575675678676",
@@ -58,11 +58,11 @@ const ShedualManagement = () => {
     {
       key: "2",
       shopName: "Cameron Salons",
-      address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+     workingHours: "9:00 AM - 6:00 PM",
 
-      email: "sadgfjdg@gmail.com",
-      phone: "+3489 9999 9778",
-      date: "01/4/2025",
+      breakTimes: "1:00 PM - 2:00 PM",
+      realTimeAvailability: "Available",
+      specialDates: "Public holidays",
       bankName: "AB Bank",
       accountHolder: "Dianne Russell",
       accountNumber: "6575675678676",
@@ -70,7 +70,7 @@ const ShedualManagement = () => {
       service: "harcut",
       branchCity: "New York",
       assigned: "talha",
-      status: "Confirmed",
+      status: "Available",
       city: "Us",
       image: "https://via.placeholder.com/40",
     },
@@ -83,7 +83,7 @@ const ShedualManagement = () => {
       key: "key",
     },
     {
-      title: "Date & time",
+      title: "Barber Name",
       dataIndex: "shopName",
       key: "shopName",
       render: (text, record) => (
@@ -94,24 +94,24 @@ const ShedualManagement = () => {
       ),
     },
     {
-      title: "Name",
-      dataIndex: "email",
-      key: "email",
+      title: "Working Hours",
+      dataIndex: "workingHours",
+      key: "workingHours",
     },
     {
-      title: "Services",
-      dataIndex: "date",
-      key: "date",
+      title: "Break Times",
+      dataIndex: "breakTimes",
+      key: "breakTimes",
     },
     {
-      title: "Barber",
-      dataIndex: "phone",
-      key: "phone",
+      title: "Real-time Availability",
+      dataIndex: "realTimeAvailability",
+      key: "realTimeAvailability",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
+      title: "Special Dates",
+      dataIndex: "specialDates",
+      key: "specialDates",
     },
     {
       title: "Action",
@@ -154,7 +154,7 @@ const ShedualManagement = () => {
           </button>
         </Dropdown>
 
-        <div
+        {/* <div
           onClick={() => setSelectedTab("personal")}
           className={` py-2 px-5 border rounded border-[#D17C51]  cursor-pointer ${
             selectedTab === "personal" ? " bg-[#D17C51] text-white  " : " "
@@ -163,7 +163,7 @@ const ShedualManagement = () => {
           <div className="flex justify-between px-5">
             <span className="flex gap-2">Schedule</span>
           </div>
-        </div>
+        </div> */}
 
         <div
           onClick={() => setSelectedTab("photo")}
@@ -183,7 +183,7 @@ const ShedualManagement = () => {
         className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
         onClick={() => setOpenAddModal(true)}
       >
-        + New Booking
+        + New Schedule
       </button>
           <Table
             dataSource={dataSource}
