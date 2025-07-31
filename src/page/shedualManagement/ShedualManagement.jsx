@@ -132,11 +132,13 @@ const ShedualManagement = () => {
         <div className="flex ">
           <Navigate title={"Schedule Management"}></Navigate>
         </div>
-        <Input
+        <div>
+          <Input
           placeholder="Search"
           prefix={<SearchOutlined />}
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
+        </div>
       </div>
       <div className="flex gap-4 items-center mb-4">
         <Dropdown
