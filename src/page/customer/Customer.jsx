@@ -4,8 +4,11 @@ import { Navigate } from "../../Navigate";
 import { TbFilter } from "react-icons/tb";
 import { MdOutlineStarPurple500 } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
+import AddCustomer from "./AddCustomer";
+import { useState } from "react";
 //df
 const Customer = () => {
+  const [openAddModal, setOpenAddModal] = useState(false);
   const items = [
     {
       label: (
@@ -31,7 +34,6 @@ const Customer = () => {
       ),
       key: "2",
     },
-    
   ];
 
   const columns = [
@@ -70,7 +72,7 @@ const Customer = () => {
       dataIndex: "contact",
       key: "contact",
     },
-    
+
     {
       title: "Block / Unblock",
       dataIndex: "blocked",
@@ -126,12 +128,11 @@ const Customer = () => {
       avatar: "https://randomuser.me/api/portraits/men/5.jpg",
       city: "Berlin",
       gender: "Male",
-      contact: "+9724545643", 
+      contact: "+9724545643",
       status: "Active",
       blocked: false,
     },
   ];
-  
 
   return (
     <div className="p-1">
@@ -146,13 +147,14 @@ const Customer = () => {
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
+
       {/* Filter and Search */}
       <div className=" p-2">
         <div className="flex justify-between items-center mb-4">
           <Dropdown
             menu={{
               items,
-            }} 
+            }}
             trigger={["click"]}
           >
             <button
@@ -164,7 +166,12 @@ const Customer = () => {
             </button>
           </Dropdown>
         </div>
-
+        <button
+          className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
+          onClick={() => setOpenAddModal(true)}
+        >
+          + New Services
+        </button>
         {/* Table */}
         <div className=" rounded-md overflow-hidden">
           <Table
@@ -172,10 +179,14 @@ const Customer = () => {
             dataSource={data}
             pagination={false}
             rowClassName=" border-b border-gray-300"
-            scroll={{ x: 800 }} 
+            scroll={{ x: 800 }}
           />
         </div>
       </div>
+      <AddCustomer
+        setOpenAddModal={setOpenAddModal}
+        openAddModal={openAddModal}
+      ></AddCustomer>
     </div>
   );
 };

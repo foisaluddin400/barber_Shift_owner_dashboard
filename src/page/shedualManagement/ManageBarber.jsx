@@ -58,7 +58,7 @@ const ManageBarber = () => {
           <div
             key={d.date}
             onClick={() => setSelectedDate(d.date)}
-            className={`w-20 h-16 text-center cursor-pointer border rounded ${
+            className={`w-20 h-16 text-center cursor-pointer border shadow-md font-semibold rounded-2xl ${
               selectedDate === d.date
                 ? "bg-[#D17C51] text-white"
                 : "border-gray-400 text-black"
@@ -76,11 +76,11 @@ const ManageBarber = () => {
           <div
             key={idx}
             onClick={() => setSelectedTime(t.time)}
-            className={`w-20 h-16 text-center cursor-pointer border rounded flex flex-col justify-center ${
+            className={`w-20 h-16 text-center cursor-pointer border font-semibold border-gray-300 shadow-md rounded-2xl flex flex-col justify-center ${
               selectedTime === t.time
                 ? "bg-[#D17C51] text-white"
                 : t.ampm === "PM"
-                ? "text-[#D17C51] border-gray-300"
+                ? "text-[#E8002A] border-gray-300"
                 : "text-black border-gray-400"
             }`}
           >
@@ -91,8 +91,8 @@ const ManageBarber = () => {
       </div>
 
       {/* Appointment Details */}
-      <div className="shadow-md bg-white p-6 rounded">
-        <div className="grid grid-cols-3 text-center font-semibold border-b pb-3">
+      <div className="shadow-md bg-white pb-52 p-6 rounded">
+        <div className="grid grid-cols-3 text-center font-semibold  pb-3">
           <div>Barber Name</div>
           <div>Service Name</div>
           <div>Customer</div>
