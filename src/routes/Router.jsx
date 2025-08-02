@@ -24,6 +24,7 @@ import { Transaction } from "../page/transaction/Transaction";
 import Services from "../page/services/Services";
 import ChatBox from "../page/chat/ChatBox";
 import ShedualManagement from "../page/shedualManagement/ShedualManagement";
+import BookingManagement from "../page/shedualManagement/BookingManagement";
 
 
 
@@ -80,6 +81,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/schedualManagement",
         element: <ShedualManagement></ShedualManagement>
+      },
+       {
+        path: "/dashboard/schedualManagement/bookingManagement",
+        element: <BookingManagement></BookingManagement>
       },
       {
         path: "/dashboard/transaction",

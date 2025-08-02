@@ -10,8 +10,9 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Edit } from "lucide-react";
 import ManageBarber from "./ManageBarber";
 import AddSchedual from "./AddSchedual";
+import AddBooking from "./AddBooking";
 
-const ShedualManagement = () => {
+const BookingManagement = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState("personal");
   const [open, setOpen] = useState(false);
@@ -38,39 +39,39 @@ const ShedualManagement = () => {
   const dataSource = [
     {
       key: "1",
-      shopName: "Cameron Salons",
+      dateAndTime: "April 20/ 10:30 Pm",
       workingHours: "9:00 AM - 6:00 PM",
 
       breakTimes: "1:00 PM - 2:00 PM",
       realTimeAvailability: "Available",
-      specialDates: "Public holidays",
-      bankName: "AB Bank",
+      Barber: "Talha",
+      name: "Safin Rods",
       accountHolder: "Dianne Russell",
       accountNumber: "6575675678676",
       branchCode: "4575467",
-      service: "harcut",
+      services: "harcut",
       branchCity: "New York",
       assigned: "talha",
       status: "Available",
       city: "Us",
       image: "https://via.placeholder.com/40",
     },
-    {
+       {
       key: "2",
-      shopName: "Cameron Salons",
-     workingHours: "9:00 AM - 6:00 PM",
+      dateAndTime: "April 20/ 10:30 Pm",
+      workingHours: "9:00 AM - 6:00 PM",
 
       breakTimes: "1:00 PM - 2:00 PM",
       realTimeAvailability: "Available",
-      specialDates: "Public holidays",
-      bankName: "AB Bank",
+      Barber: "Talha",
+      name: "Safin Rods",
       accountHolder: "Dianne Russell",
       accountNumber: "6575675678676",
       branchCode: "4575467",
-      service: "harcut",
+      services: "harcut",
       branchCity: "New York",
       assigned: "talha",
-      status: "Available",
+      status: "Booking",
       city: "Us",
       image: "https://via.placeholder.com/40",
     },
@@ -82,37 +83,46 @@ const ShedualManagement = () => {
       dataIndex: "key",
       key: "key",
     },
+  
     {
-      title: "Barber Name",
-      dataIndex: "shopName",
-      key: "shopName",
-      render: (text, record) => (
-        <Link to={'/dashboard/schedualManagement/bookingManagement'}><div className="flex items-center space-x-2">
-          <img src={record.image} alt="Shop" className="w-8 h-8 rounded-full" />
-          <span>{text}</span>
-        </div></Link>
-      ),
+      title: "Date And Time",
+      dataIndex: "dateAndTime",
+      key: "dateAndTime",
     },
     {
-      title: "Working Hours",
-      dataIndex: "workingHours",
-      key: "workingHours",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Break Times",
-      dataIndex: "breakTimes",
-      key: "breakTimes",
+      title: "Services",
+      dataIndex: "services",
+      key: "services",
     },
     {
-      title: "Real-time Availability",
-      dataIndex: "realTimeAvailability",
-      key: "realTimeAvailability",
+      title: "Barber",
+      dataIndex: "Barber",
+      key: "Barber",
     },
-    {
-      title: "Special Dates",
-      dataIndex: "specialDates",
-      key: "specialDates",
-    },
+  {
+  title: "Status",
+  dataIndex: "status",
+  key: "status",
+  render: (status) => (
+    <span
+      className={`font-medium ${
+        status === "Available"
+          ? "text-green-600"
+          : status === "Booking"
+          ? "text-blue-600"
+          : "text-gray-500"
+      }`}
+    >
+      {status}
+    </span>
+  ),
+},
+
     {
       title: "Action",
       key: "action",
@@ -185,7 +195,7 @@ const ShedualManagement = () => {
         className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
         onClick={() => setOpenAddModal(true)}
       >
-        + New Schedule
+        + New Booking
       </button>
           <Table
             dataSource={dataSource}
@@ -199,10 +209,10 @@ const ShedualManagement = () => {
       {selectedTab === "photo" && <div>
         <ManageBarber></ManageBarber></div>}
 
-        <AddSchedual setOpenAddModal={setOpenAddModal}
-        openAddModal={openAddModal}></AddSchedual>
+        <AddBooking setOpenAddModal={setOpenAddModal}
+        openAddModal={openAddModal}></AddBooking>
     </div>
   );
 };
 
-export default ShedualManagement;
+export default BookingManagement;
