@@ -49,6 +49,10 @@ const ManageBarber = () => {
   // const [openAddModal, setOpenAddModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(4);
   const [selectedTime, setSelectedTime] = useState("11:00");
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+    const showModal = () => setIsModalOpen(true);
+  const handleOk = () => setIsModalOpen(false);
+  const handleCancel = () => setIsModalOpen(false);
   return (
     <div>
       <div className="mt-11">
@@ -112,7 +116,8 @@ const ManageBarber = () => {
           <div>Hair cut</div>
 
           {/* Customer */}
-          <div className="flex items-center justify-center gap-2">
+        
+          <div  onClick={showModal} className="flex  items-center justify-center gap-2">
             <img
               src="https://randomuser.me/api/portraits/men/31.jpg"
               alt="customer"
@@ -123,16 +128,12 @@ const ManageBarber = () => {
         </div>
       </div>
     </div>
-      {/* <button
-        className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
-        onClick={() => setOpenAddModal(true)}
-      >
-        + New Schedule
-      </button> */}
-       
-
-          {/* <AddManage setOpenAddModal={setOpenAddModal}
-        openAddModal={openAddModal}></AddManage> */}
+    <Modal centered title="Customer Details" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <p><strong>Payment Status:</strong> Paid $30 (Remaining: $20)</p>
+        <p><strong>Notes:</strong> Please be gentle with beard area.</p>
+        <p><strong>Booking Date:</strong> August 10, 2025</p>
+        <p><strong>Time Slot:</strong> 11:00 AM</p>
+      </Modal>
     </div>
   )
 }
