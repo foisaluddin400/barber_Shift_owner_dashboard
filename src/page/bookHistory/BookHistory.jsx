@@ -1,91 +1,47 @@
 import React, { useState } from "react";
-import { Table, Button, Modal, Input, Dropdown } from "antd";
-import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
-import { BiMessageRoundedDots } from "react-icons/bi";
-import { RxCrossCircled } from "react-icons/rx";
+import { Table, Input, Pagination } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
-import { IoIosArrowDown } from "react-icons/io";
+import { useGetAllBookingHistoryQuery } from "../redux/api/manageApi";
 
 const BookHistory = () => {
-  const [open, setOpen] = useState(false);
-  const [selectedShop, setSelectedShop] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [status, setStatus] = useState(""); // State for status filter
+  const pageSize = 10;
 
-  const items = [
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Upcoming Booking
-        </button>
-      ),
-      key: "0",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Cancel
-        </button>
-      ),
-      key: "1",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Completed
-        </button>
-      ),
-      key: "2",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          No-Show Fee
-        </button>
-      ),
-      key: "3",
-    },
-  ];
-  const dataSource = [
-    {
-      key: "1",
-      shopName: "Cameron Salons",
-      address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+  // API query, conditionally include status if selected
+  const { data: bookingData, isLoading } = useGetAllBookingHistoryQuery({
+    status: status, // Send status only if it's not empty
+    searchTerm: searchTerm,
+    page: currentPage,
+    limit: pageSize,
+  });
 
-      email: "sadgfjdg@gmail.com",
-      phone: "+3489 9999 9778",
-      date: "01/4/2025",
-      bankName: "AB Bank",
-      accountHolder: "Dianne Russell",
-      accountNumber: "6575675678676",
-      branchCode: "4575467",
-      service: "harcut",
-      branchCity: "New York",
-      assigned: "talha",
-      status: "Confirmed",
-      city: "Us",
-      image: "https://via.placeholder.com/40",
-    },
-    {
-      key: "2",
-      shopName: "Cameron Salons",
-      address: "1901 Thornridge Cir. Shiloh, Hawaii 81063",
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-      email: "sadgfjdg@gmail.com",
-      phone: "+3489 9999 9778",
-      date: "01/4/2025",
-      bankName: "AB Bank",
-      accountHolder: "Dianne Russell",
-      accountNumber: "6575675678676",
-      branchCode: "4575467",
-      service: "harcut",
-      branchCity: "New York",
-      assigned: "talha",
-      status: "Confirmed",
-      city: "Us",
-      image: "https://via.placeholder.com/40",
-    },
-  ];
+  // Handle status change
+  const handleStatusChange = (e) => {
+    setStatus(e.target.value || ""); // Set status or clear it
+    setCurrentPage(1); // Reset to first page when status changes
+  };
+
+  // Table datasource map from API
+  const dataSource =
+    bookingData?.data?.map((booking, index) => ({
+      key: index + 1,
+      customerName: booking.customerName,
+      customerImage: booking.customerImage,
+      email: booking.customEmail,
+      phone: booking.customerPhone || "N/A",
+      date: new Date(booking.bookingDate).toLocaleDateString(),
+      time: `${booking.startTime} - ${booking.endTime}`,
+      service: booking.services.map((s) => s.serviceName).join(", "),
+      barber: booking.barberName,
+      status: booking.status,
+    })) || [];
 
   const columns = [
     {
@@ -95,11 +51,17 @@ const BookHistory = () => {
     },
     {
       title: "Customer Name",
-      dataIndex: "shopName",
-      key: "shopName",
+      dataIndex: "customerName",
+      key: "customerName",
       render: (text, record) => (
         <div className="flex items-center space-x-2">
-          <img src={record.image} alt="Shop" className="w-8 h-8 rounded-full" />
+          {record.customerImage && (
+            <img
+              src={record.customerImage}
+              alt={text}
+              className="w-8 h-8 rounded-full"
+            />
+          )}
           <span>{text}</span>
         </div>
       ),
@@ -110,14 +72,19 @@ const BookHistory = () => {
       key: "email",
     },
     {
-      title: "Date & Time",
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Date",
       dataIndex: "date",
       key: "date",
     },
     {
-      title: "phone",
-      dataIndex: "phone",
-      key: "phone",
+      title: "Time",
+      dataIndex: "time",
+      key: "time",
     },
     {
       title: "Service Booked",
@@ -126,57 +93,64 @@ const BookHistory = () => {
     },
     {
       title: "Assigned Barber",
-      dataIndex: "assigned",
-      key: "assigned",
+      dataIndex: "barber",
+      key: "barber",
     },
     {
       title: "Booking Status",
       dataIndex: "status",
       key: "status",
     },
-    {
-      title: "Action",
-      key: "action",
-      render: () => (
-        <div className="flex gap-2 text-xl">
-          <TbRosetteDiscountCheckFilled className="text-green-500" />
-          <Link to={'/dashboard/bookingHistory/chat'}><BiMessageRoundedDots className="text-[#AB684D]" /></Link>
-          <RxCrossCircled className="text-[#AB684D]" />
-        </div>
-      ),
-    },
   ];
 
   return (
-    <div className=" p-1">
-      <div className="flex justify-between">
-        <div className="flex ">
-          <Navigate title={"Booking History"}></Navigate>
-          <h1 className=" pl-2 font-semibold text-xl">{`(110)`}</h1>
+    <div className="p-1">
+      <div className="flex justify-between mb-4">
+        <div className="flex items-center">
+          <Navigate title={"Booking History"} />
+          <h1 className="pl-2 -mt-5 font-semibold text-xl">
+            ({bookingData?.data?.length || 0})
+          </h1>
         </div>
         <Input
           placeholder="Search"
           prefix={<SearchOutlined />}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
+
       <div className="flex justify-between items-center mb-4">
-        <Dropdown
-          menu={{
-            items,
-          }}
-          trigger={["click"]}
+        <select
+          className="rounded p-2 px-4 border border-[#C79A88]"
+          value={status}
+          onChange={handleStatusChange}
         >
-          <button
-            className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-            onClick={(e) => e.preventDefault()}
-          >
-            Upcoming Booking
-            <IoIosArrowDown />
-          </button>
-        </Dropdown>
+          <option value="">All Statuses</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled</option>
+          <option value="NO_SHOW">No Show</option>
+          <option value="REFUNDED">Refunded</option>
+        </select>
       </div>
-      <Table dataSource={dataSource} columns={columns} pagination={false} scroll={{ x: 800 }} />
+
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        loading={isLoading}
+        pagination={false}
+        scroll={{ x: 900 }}
+      />
+      <div className="mt-4 flex justify-center">
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={bookingData?.meta?.total || 0}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
+      </div>
     </div>
   );
 };

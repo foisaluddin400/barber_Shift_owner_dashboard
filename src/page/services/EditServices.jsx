@@ -1,37 +1,50 @@
-import { Form, Modal, Upload, DatePicker, TimePicker, Input, Select } from "antd";
-import React, { useState } from "react";
+import { Form, Modal, Upload, DatePicker, TimePicker, Input, Select, message } from "antd";
+import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import { useUpdateServicesOwnerMutation } from "../redux/api/manageApi";
 
 //adf
-const EditServices = ({ editModal, setEditModal }) => {
+const EditServices = ({ editModal, setEditModal,selectedUser }) => {
+  console.log(selectedUser?.id)
     const [form] = Form.useForm();
-    const [fileList, setFileList] = useState([]);
-  
-    const onChange = ({ fileList: newFileList }) => setFileList(newFileList);
-  
-    const onPreview = async (file) => {
-      let src = file.url;
-      if (!src) {
-        src = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file.originFileObj);
-          reader.onload = () => resolve(reader.result);
-        });
-      }
-      const image = new Image();
-      image.src = src;
-      const imgWindow = window.open(src);
-      imgWindow?.document.write(image.outerHTML);
-    };
-  
+
+  const [updateServices] = useUpdateServicesOwnerMutation()
+
     const handleCancel = () => {
       form.resetFields();
-      setFileList([]);
+
       setEditModal(false);
     };
-  
-    const handleSubmit = (values) => {
+useEffect(() => {
+  if (selectedUser) {
+    form.setFieldsValue({
+      duration: selectedUser?.duration || "",
+      serviceName: selectedUser?.name || "",
+      availableTo: selectedUser?.availableTo || '',
+      price: selectedUser?.price || "",
+    });
+  }
+}, [selectedUser, form]);
+
+    const handleSubmit = async (values) => {
+      const id = selectedUser?.id
       console.log("Submitted:", values);
+        const data = {
+            duration: Number(values?.duration),
+            price: Number(values?.price),
+            availableTo: values?.availableTo,
+            serviceName: values?.serviceName,
+          };
+          console.log(data);
+          try {
+            const response = await updateServices({data,id}).unwrap();
+      
+            message.success(response?.message);
+            setEditModal(false);
+          } catch (error) {
+            console.error(error);
+            message.error(error?.data?.message);
+          }
     };
   
     return (
@@ -45,72 +58,69 @@ const EditServices = ({ editModal, setEditModal }) => {
         <div className="mb-6 mt-2">
           <h2 className="text-center font-semibold text-xl mb-4">Edit Services</h2>
   
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          className="px-2"
-        >
-          <Form.Item label="Service name" name="name" className="mb-0">
-            <Input
-              placeholder="input services"
-              className="w-full"
-              style={{ height: 40 }}
-            />
-          </Form.Item>
-
-          <Form.Item label="Service abailable for" name="name" className="mb-0">
-            <Select
-            
-              labelInValue
-              defaultValue={{ value: "lucy", label: "Lucy (101)" }}
-              
-              
-              options={[
-                {
-                  value: "Everyone",
-                  label: "Jack (100)",
-                },
-                {
-                  value: "Male only",
-                  label: "Lucy (101)",
-                },
-                {
-                  value: "Female only",
-                  label: "Lucy (101)",
-                },
-              ]}
-            />
-          </Form.Item>
-
-          {/* Date, Time, Duration */}
-          <div className="grid grid-cols-3 gap-2 mt-3 mb-4">
-            <Form.Item  label="Duration" name="date" className="mb-0">
-              <DatePicker
-
-                placeholder="Enter Date"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
-            <Form.Item label="Price" name="time" className="mb-0">
-              <TimePicker
-                placeholder="Enter time"
-                className="w-full"
-                style={{ height: 40 }}
-              />
-            </Form.Item>
-          </div>
-
-       
-
-          <button
-            type="submit"
-            className="w-full py-2 mt-2 bg-[#D17C51] text-white rounded-md"
+      <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSubmit}
+            className="px-2"
           >
-            Save
-          </button>
-        </Form>
+            <Form.Item label="Service name" name="serviceName" className="mb-0">
+              <Input
+                placeholder="input services"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+              </Form.Item>
+           <div className="mt-4">  <Form.Item
+                label="Services Available To"
+                name="availableTo"
+                rules={[
+                  { required: true, message: "Please input availableTo!" },
+                ]}
+              >
+                <Select
+                  style={{ height: "48px" }}
+                  placeholder="Select Available"
+                  className="w-full"
+                >
+                  <Option value="Select Available">Select</Option>
+                  <Option value="EVERYONE">EVERYONE</Option>
+                  <Option value="MALE">MALE</Option>
+                  <Option value="FEMALE">FEMALE</Option>
+           
+                </Select>
+              </Form.Item></div>
+  
+  
+  
+            {/* Date, Time, Duration */}
+            <div className="grid grid-cols-3 gap-2 mt-3 mb-4">
+              <Form.Item  label="Duration" name="duration" className="mb-0">
+                <Input
+                placeholder="Duration"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+              </Form.Item>
+              <Form.Item label="Price" name="price" className="mb-0">
+                 <Input
+                 type="number"
+                placeholder="Price"
+                className="w-full"
+                style={{ height: 40 }}
+              />
+              </Form.Item>
+            </div>
+  
+         
+  
+            <button
+              type="submit"
+              className="w-full py-2 mt-2 bg-[#D17C51] text-white rounded-md"
+            >
+              Save
+            </button>
+          </Form>
         </div>
       </Modal>
     );

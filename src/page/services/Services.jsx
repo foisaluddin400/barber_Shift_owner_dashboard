@@ -1,94 +1,125 @@
-import { Input } from "antd";
+import { Input, Table, Button, Pagination, message } from "antd";
 import { Navigate } from "../../Navigate";
 import { SearchOutlined } from "@ant-design/icons";
 import AddServices from "./AddServices";
-import { useState } from "react";
 import EditServices from "./EditServices";
-const servicesData = [
-  {
-    title: "Hair & styling",
-    color: "bg-blue-500",
-    services: [
-      { name: "Haircut", time: "40 minutes", price: "$25" },
-      { name: "Beardcut", time: "30 minutes", price: "$30" },
-      { name: "Hair style", time: "30 minutes", price: "$30" },
-      { name: "Hair style", time: "30 minutes", price: "$30" },
-      { name: "Hair style", time: "30 minutes", price: "$30" },
-    ],
-  },
-  {
-    title: "Color & Wax",
-    color: "bg-orange-500",
-    services: [
-      { name: "Hair color", time: "40 minutes", price: "$25" },
-      { name: "Beard color", time: "30 minutes", price: "$30" },
-    ],
-  },
-];
+import { useState } from "react";
+import { useDeleteServicesOwnerMutation, useGetAllServicesOwnerQuery } from "../redux/api/manageApi";
 
 const Services = () => {
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
+  const { data: services, isLoading } = useGetAllServicesOwnerQuery({
+    searchTerm,
+    page: currentPage,
+    limit: pageSize,
+  });
+  console.log(services)
+
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+const [deleteSrvices] = useDeleteServicesOwnerMutation()
+  const handleEdit = (record) => {
+    setSelectedUser(record);
+    setEditModal(true);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  const handleDeleteFaq = async (id) => {
+    try {
+      const res = await deleteSrvices(id).unwrap();
+      message.success(res?.message);
+    } catch (err) {
+      message.error(err?.data?.message);
+    }
+  };
+  const columns = [
+    {
+      title: "Service Name",
+      dataIndex: "name",
+      key: "name",
+    },
+       {
+      title: "Avilable To",
+      dataIndex: "availableTo",
+      key: "availableTo",
+    },
+    {
+      title: "Duration",
+      dataIndex: "duration",
+      key: "duration",
+      render: (duration) => `${duration} `,
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `$${price}`,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <div className="flex gap-4">
+          <Button onClick={() => handleDeleteFaq(record?.id)} type="link" >
+            Delete
+          </Button>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            Edit
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="p-1">
-      <div className="flex justify-between mb-4 ">
+      <div className="flex justify-between mb-4">
         <Navigate title={"Services"} />
         <Input
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Search"
           prefix={<SearchOutlined />}
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
 
-      <button
-        className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
+      <Button
+        className="bg-[#D17C51] text-white mb-4"
         onClick={() => setOpenAddModal(true)}
       >
         + New Services
-      </button>
-      <div className="grid md:grid-cols-2 gap-6">
-        {servicesData.map((category, index) => (
-          <div key={index}>
-            {/* Category Title */}
-            <div className="flex items-center gap-2 mb-4">
-              <span className={`w-3 h-3 rounded-full ${category.color}`}></span>
-              <h2 className="text-lg font-semibold">{category.title}</h2>
-            </div>
+      </Button>
 
-            {/* Services List */}
-            <div className="space-y-3">
-              {category.services.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="border rounded-md p-3 flex justify-between items-center"
-                >
-                  <div>
-                    <h3 className="font-semibold">{item.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {item.time} –{" "}
-                      <span className="font-semibold">{item.price}</span>
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setEditModal(true)}
-                    className="text-sm text-orange-500 hover:underline"
-                  >
-                    ✎ Edit
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+      <Table
+        columns={columns}
+        dataSource={services?.data}
+        rowKey="id"
+        loading={isLoading}
+        pagination={false}
+      />
+
+      <div className="mt-4 flex justify-center">
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={services?.meta?.total || 0}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
       </div>
-      <AddServices
-        setOpenAddModal={setOpenAddModal}
-        openAddModal={openAddModal}
-      ></AddServices>
+
+      <AddServices openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} />
       <EditServices
         editModal={editModal}
         setEditModal={setEditModal}
-      ></EditServices>
+        selectedUser={selectedUser}
+      />
     </div>
   );
 };

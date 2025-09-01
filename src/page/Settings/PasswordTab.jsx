@@ -2,11 +2,12 @@ import { Button, Form, Input, message } from "antd";
 import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { useChangePasswordMutation } from "../redux/api/userApi";
 
 
 export const PasswordTab = () => {
  
-
+const [changePass] = useChangePasswordMutation()
   const [passError, setPassError] = useState("");
   const navigate = useNavigate(); 
 
@@ -22,28 +23,26 @@ export const PasswordTab = () => {
 
     
     const data = {
-      id: adminId,
+      
       oldPassword: values.oldPassword,
       newPassword: values.newPassword,
     };
 
 
-    // try {
-    //   await changePassword(data).unwrap(); 
-    //   message.success("Password updated successfully!");
-    //   localStorage.removeItem("accessToken"); 
-    //   navigate("/login"); 
-    // } catch (error) {
-    //   message.error(error?.data?.message || "Failed to update password.");
-    // }
+    try {
+    const res = await changePass(data).unwrap(); 
+      message.success(res?.message );
+      localStorage.removeItem("accessToken"); 
+      navigate("/login"); 
+    } catch (error) {
+      message.error(error?.data?.message || "Failed to update password.");
+    }
   };
-
+//df
   return (
     <div>
     <Form layout="vertical" onFinish={handlePasswordChange}>
-      <h2 className="text-xl font-semibold mb-4 text-center">
-        Change Your Password
-      </h2>
+    
 
       <Form.Item
         name="oldPassword"

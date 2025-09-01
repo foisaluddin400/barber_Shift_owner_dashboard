@@ -1,18 +1,20 @@
+import { useGetDasboardQuery } from "../../page/redux/api/manageApi";
 import ShopRegistration from "./ShopRegistration";
 import { SubscriptionGrowth } from "./SubscriptionGrowth";
 import UserGrowth from "./UserGrowth";
 
 const Dashboard = () => {
+  const {data:dashboradData} = useGetDasboardQuery()
   return (
     <div className="p-2 min-h-screen">
       <div className="  grid grid-cols-2 gap-4 text-center py-3">
         <div className="bg-white py-6 rounded-md">
           <p className=" mt-3 text-xl">Total Customer</p>
-          <h1 className="text-3xl font-bold">123</h1>
+          <h1 className="text-3xl font-bold">{dashboradData?.data?.totalCustomers || '0'}</h1>
         </div>
         <div className=" bg-white py-6 rounded-md">
         <p className=" mt-3 text-xl">Total Barber</p>
-          <h1 className="text-3xl font-bold">9</h1>
+          <h1 className="text-3xl font-bold">{dashboradData?.data?.totalBarbers || '0'}</h1>
           
         </div>
         

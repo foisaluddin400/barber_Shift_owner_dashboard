@@ -1,46 +1,31 @@
-import { Table, Switch, Tag, Input, Button, Dropdown, Space } from "antd";
-import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
+import { Table, Input, Pagination } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
-import { TbFilter } from "react-icons/tb";
-import { MdOutlineStarPurple500 } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
-import AddCustomer from "./AddCustomer";
 import { useState } from "react";
-//df
+import { useGetAllCustomerOwnerQuery } from "../redux/api/manageApi";
+import AddCustomer from "./AddCustomer";
+
 const Customer = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
-  const items = [
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Blocked
-        </button>
-      ),
-      key: "0",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Active
-        </button>
-      ),
-      key: "1",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          All Customers
-        </button>
-      ),
-      key: "2",
-    },
-  ];
-
+      const [searchTerm, setSearch] = useState("");
+    console.log(searchTerm)
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    const pageSize = 10;
+  const { data: customerData } = useGetAllCustomerOwnerQuery({ 
+    searchTerm:searchTerm,
+     page: currentPage,
+    limit: pageSize,}); 
+console.log(customerData)
+     const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  
   const columns = [
     {
-      title: "#",
-      dataIndex: "id",
-      key: "id",
+      title: "SI No",
+      key: "siNo",
+      render: (_, __, index) => index + 1,
     },
     {
       title: "Customer Name",
@@ -49,7 +34,7 @@ const Customer = () => {
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={record.avatar}
+            src={record.customerImage || "https://via.placeholder.com/40"}
             alt="avatar"
             className="w-8 h-8 rounded-full"
           />
@@ -58,135 +43,109 @@ const Customer = () => {
       ),
     },
     {
-      title: "City",
-      dataIndex: "city",
-      key: "city",
+      title: "Barber Name",
+      dataIndex: "barberName",
+      key: "barberName",
+      render: (text, record) => (
+        <div className="flex items-center gap-2">
+          <img
+            src={record.barberImage || "https://via.placeholder.com/40"}
+            alt="barber"
+            className="w-8 h-8 rounded-full"
+          />
+          <span>{text}</span>
+        </div>
+      ),
     },
     {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "Gender",
+      title: "Booking Date",
+      dataIndex: "bookingDate",
+      key: "bookingDate",
+      render: (date) => new Date(date).toLocaleDateString(),
     },
     {
-      title: "Contact",
-      dataIndex: "contact",
-      key: "contact",
+      title: "Time",
+      key: "time",
+      render: (_, record) => `${record.startTime} - ${record.endTime}`,
     },
-
     {
-      title: "Block / Unblock",
-      dataIndex: "blocked",
-      key: "blocked",
-      render: (blocked) => <Switch defaultChecked={!blocked} />,
+      title: "Total Price",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      render: (price) => `$${price}`,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <span
+          className={`px-2 py-1 rounded ${
+            status === "CONFIRMED"
+              ? "bg-green-200 text-green-800"
+              : "bg-gray-200 text-gray-800"
+          }`}
+        >
+          {status}
+        </span>
+      ),
     },
   ];
 
-  const data = [
-    {
-      id: "01",
-      customerName: "Barber Time",
-      avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-      city: "Berlin",
-      gender: "Male",
-      contact: "+9724545643",
-      status: "Active",
-      blocked: false,
-    },
-    {
-      id: "02",
-      customerName: "Barber Time",
-      avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-      city: "Frankfurt",
-      gender: "Female",
-      contact: "+9724545643",
-      status: "Inactive",
-      blocked: true,
-    },
-    {
-      id: "03",
-      customerName: "Barber Time",
-      avatar: "https://randomuser.me/api/portraits/women/3.jpg",
-      city: "Berlin",
-      gender: "Female",
-      contact: "+9724545643",
-      status: "Active",
-      blocked: false,
-    },
-    {
-      id: "04",
-      customerName: "Barber Time",
-      avatar: "https://randomuser.me/api/portraits/men/4.jpg",
-      city: "Frankfurt",
-      gender: "Male",
-      contact: "+9724545643",
-      status: "Active",
-      blocked: false,
-    },
-    {
-      id: "05",
-      customerName: "Barber Time",
-      avatar: "https://randomuser.me/api/portraits/men/5.jpg",
-      city: "Berlin",
-      gender: "Male",
-      contact: "+9724545643",
-      status: "Active",
-      blocked: false,
-    },
-  ];
+  // Use backend data if exists
+  const tableData = customerData?.data || [];
 
   return (
     <div className="p-1">
       <div className="flex justify-between">
-        <div className="flex ">
-          <Navigate title={"Customers"}></Navigate>
-          <h1 className=" pl-2 font-semibold text-xl">{`(110)`}</h1>
+        <div className="flex">
+          <Navigate title={"Customers"} />
+          <h1 className="pl-2 font-semibold text-xl">
+            {`(${tableData.length})`}
+          </h1>
         </div>
         <Input
+        onChange={(e) => setSearch(e.target.value)}
           placeholder="Search"
           prefix={<SearchOutlined />}
           className="w-64 px-4 py-2 rounded-lg bg-white"
         />
       </div>
 
-      {/* Filter and Search */}
-      <div className=" p-2">
-        <div className="flex justify-between items-center mb-4">
-          <Dropdown
-            menu={{
-              items,
-            }}
-            trigger={["click"]}
-          >
-            <button
-              className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-              onClick={(e) => e.preventDefault()}
-            >
-              All Customers
-              <IoIosArrowDown />
-            </button>
-          </Dropdown>
-        </div>
-        <button
+      <div className="p-2">
+        {/* <button
           className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
           onClick={() => setOpenAddModal(true)}
         >
           + New Services
-        </button>
-        {/* Table */}
-        <div className=" rounded-md overflow-hidden">
+        </button> */}
+
+        <div className="rounded-md overflow-hidden">
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={tableData}
+            rowKey="bookingId" // still unique key needed
             pagination={false}
-            rowClassName=" border-b border-gray-300"
+            rowClassName="border-b border-gray-300"
             scroll={{ x: 800 }}
           />
         </div>
+          <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={customerData?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+            
+          />
+        </div>
       </div>
+{/* 
       <AddCustomer
         setOpenAddModal={setOpenAddModal}
         openAddModal={openAddModal}
-      ></AddCustomer>
+      /> */}
     </div>
   );
 };

@@ -6,12 +6,15 @@ import {
   TimePicker,
   Input,
   Select,
+  message,
 } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { useAddServicesOwnerMutation } from "../redux/api/manageApi";
 
 const AddServices = ({ openAddModal, setOpenAddModal }) => {
+  const [addServices] = useAddServicesOwnerMutation()
   const [form] = Form.useForm();
   const handleCancel = () => {
     form.resetFields();
@@ -19,8 +22,24 @@ const AddServices = ({ openAddModal, setOpenAddModal }) => {
     setOpenAddModal(false);
   };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     console.log("Submitted", values);
+       const data = {
+      duration: Number(values?.duration),
+      price: Number(values?.price),
+      availableTo: values?.availableTo,
+      serviceName: values?.serviceName,
+    };
+    console.log(data);
+    try {
+      const response = await addServices(data).unwrap();
+
+      message.success(response?.message);
+      setOpenAddModal(false);
+    } catch (error) {
+      console.error(error);
+      message.error(error?.data?.message);
+    }
   };
 
   return (
@@ -42,54 +61,51 @@ const AddServices = ({ openAddModal, setOpenAddModal }) => {
           onFinish={handleSubmit}
           className="px-2"
         >
-          <Form.Item label="Service name" name="name" className="mb-0">
+          <Form.Item label="Service name" name="serviceName" className="mb-0">
             <Input
               placeholder="input services"
               className="w-full"
               style={{ height: 40 }}
             />
-          </Form.Item>
+            </Form.Item>
+            <div className="mt-4">  <Form.Item
+                          label="Services Available To"
+                          name="availableTo"
+                          rules={[
+                            { required: true, message: "Please input availableTo!" },
+                          ]}
+                        >
+                          <Select
+                            style={{ height: "48px" }}
+                            placeholder="Select Available"
+                            className="w-full"
+                          >
+                            <Option value="Select Available">Select</Option>
+                            <Option value="EVERYONE">EVERYONE</Option>
+                            <Option value="MALE">MALE</Option>
+                            <Option value="FEMALE">FEMALE</Option>
+                     
+                          </Select>
+                        </Form.Item></div>
 
-          <Form.Item label="Service abailable for" name="name" className="mb-0">
-            <Select
-            
-              labelInValue
-              defaultValue={{ value: "lucy", label: "Lucy (101)" }}
-              
-              
-              options={[
-                {
-                  value: "Everyone",
-                  label: "Jack (100)",
-                },
-                {
-                  value: "Male only",
-                  label: "Lucy (101)",
-                },
-                {
-                  value: "Female only",
-                  label: "Lucy (101)",
-                },
-              ]}
-            />
-          </Form.Item>
+
 
           {/* Date, Time, Duration */}
           <div className="grid grid-cols-3 gap-2 mt-3 mb-4">
-            <Form.Item  label="Duration" name="date" className="mb-0">
-              <DatePicker
-
-                placeholder="Enter Date"
-                className="w-full"
-                style={{ height: 40 }}
-              />
+            <Form.Item  label="Duration" name="duration" className="mb-0">
+              <Input
+              placeholder="Duration"
+              className="w-full"
+              style={{ height: 40 }}
+            />
             </Form.Item>
-            <Form.Item label="Price" name="time" className="mb-0">
-              <TimePicker
-                placeholder="Enter time"
-                className="w-full"
-                style={{ height: 40 }}
-              />
+            <Form.Item label="Price" name="price" className="mb-0">
+               <Input
+               type="number"
+              placeholder="Price"
+              className="w-full"
+              style={{ height: 40 }}
+            />
             </Form.Item>
           </div>
 

@@ -1,151 +1,133 @@
-import { Table, Switch, Tag, Input, Button, Dropdown, Space } from "antd";
-import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
-import { Navigate } from "../../Navigate";
-import { TbFilter } from "react-icons/tb";
-import { MdOutlineStarPurple500 } from "react-icons/md";
-import { IoIosArrowDown } from "react-icons/io";
+import { Table, Input, Pagination } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Navigate } from "../../Navigate";
+import { useGetAllTreansactionOwnerQuery } from "../redux/api/manageApi";
 
 export const Transaction = () => {
-  const items = [
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-          Barber
-        </button>
-      ),
-      key: "0",
-    },
-    {
-      label: (
-        <button target="_blank" rel="noopener noreferrer">
-         Customer
-        </button>
-      ),
-      key: "1",
-    },
-   
-  ];
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+console.log(searchTerm)
+  const { data: transaction } = useGetAllTreansactionOwnerQuery({
+    searchTerm,
+    page: currentPage,
+    limit: pageSize,
+  });
+
+  const handlePageChange = (page) => setCurrentPage(page);
 
   const columns = [
     {
-      title: "#",
-      dataIndex: "id",
-      key: "id",
+      title: "SI No",
+      key: "siNo",
+      render: (_, __, index) => index + 1,
     },
     {
-        title: "Date",
-        dataIndex: "date",
-        key: "date",
-      },
+      title: "Date",
+      dataIndex: "bookingDate",
+      key: "date",
+      render: (text) => new Date(text).toLocaleDateString(),
+    },
     {
-      title: "Name",
+      title: "Customer Name",
+      dataIndex: "customerName",
+      key: "customerName",
+      render: (text, record) => (
+        <div className="flex items-center gap-2">
+          <img
+            src={record.customerImage}
+            alt="avatar"
+            className="w-8 h-8 rounded-full"
+          />
+          <span>{text}</span>
+        </div>
+      ),
+    },
+    {
+      title: "Customer Email",
+      dataIndex: "customEmail",
+      key: "customEmail",
+    },
+    {
+      title: "Barber Name",
       dataIndex: "barberName",
       key: "barberName",
       render: (text, record) => (
-        <Link to={"/dashboard/barber/barberDetails"}>
-          <div className="flex items-center gap-2">
-            <img
-              src={record.avatar}
-              alt="avatar"
-              className="w-8 h-8 rounded-full"
-            />
-            <span>{text}</span>
-          </div>
-        </Link>
+        <div className="flex items-center gap-2">
+          <img
+            src={record.barberImage}
+            alt="avatar"
+            className="w-8 h-8 rounded-full"
+          />
+          <span>{text}</span>
+        </div>
       ),
     },
-   
-   
     {
-      title: "Paid Ammount",
-      dataIndex: "sales",
-      key: "sales",
+      title: "Barber Email",
+      dataIndex: "barberEmail",
+      key: "barberEmail",
     },
     {
-        title: "Payment Type",
-        dataIndex: "type",
-        key: "type",
-      },
+      title: "Paid Amount",
+      dataIndex: "paymentAmount",
+      key: "paymentAmount",
+      render: (text) => `$${text}`,
+    },
+    {
+      title: "Payment Status",
+      dataIndex: "paymentStatus",
+      key: "paymentStatus",
+      render: (status) => (
+        <span
+          className={`px-2 py-1 rounded ${
+            status === "COMPLETED" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+          }`}
+        >
+          {status}
+        </span>
+      ),
+    },
   ];
 
-  const data = [
-    {
-      id: "01",
-      barberName: "Barber Time",
-      avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-      sales: "$2444",
-      shop: "shopping ",
-      type:'Online Payment',
-      contact: "+9724545643",
-      date:'12/06/24'
-    },
-    {
-        id: "02",
-        barberName: "Barber Time",
-        avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-        sales: "$2444",
-        shop: "shopping ",
-        type:'Online Payment',
-        contact: "+9724545643",
-        date:'12/06/24'
-      },
-      {
-        id: "03",
-        barberName: "Barber Time",
-        avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-        sales: "$2444",
-        shop: "shopping ",
-        type:'Online Payment',
-        contact: "+9724545643",
-        date:'12/06/24'
-      },
-    
-  ];
+  const tableData = transaction?.data || [];
 
   return (
     <div>
       <div className="p-1">
         <div className="flex justify-between">
-          <div className="flex ">
-            <Navigate title={"Transaction"}></Navigate>
-            
-          </div>
+          <Navigate title={"Transaction"} />
           <Input
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             prefix={<SearchOutlined />}
             className="w-64 px-4 py-2 rounded-lg bg-white"
           />
         </div>
-        {/* Filter and Search */}
-        <div className=" p-2">
-          <div className="flex justify-between items-center mb-4">
-            <Dropdown
-              menu={{
-                items,
-              }}
-              trigger={["click"]}
-            >
-              <button
-                className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-                onClick={(e) => e.preventDefault()}
-              >
-                Barber
-                <IoIosArrowDown />
-              </button>
-            </Dropdown>
-          </div>
 
-          {/* Table */}
-          <div className=" rounded-md overflow-hidden">
+        <div className="p-2">
+          <div className="rounded-md overflow-hidden">
             <Table
               columns={columns}
-              dataSource={data}
+              dataSource={tableData}
+              rowKey="paymentId"
               pagination={false}
-              rowClassName=" border-b border-gray-300"
-              scroll={{ x: 800 }} 
+              rowClassName="border-b border-gray-300"
+              scroll={{ x: 1000 }}
             />
           </div>
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={transaction?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
         </div>
       </div>
     </div>

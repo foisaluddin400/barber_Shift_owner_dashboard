@@ -25,6 +25,8 @@ import Services from "../page/services/Services";
 import ChatBox from "../page/chat/ChatBox";
 import ShedualManagement from "../page/shedualManagement/ShedualManagement";
 import BookingManagement from "../page/shedualManagement/BookingManagement";
+import { SocketProvider } from "../context/ContextProvider";
+import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
 
 
@@ -33,7 +35,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: (
      
-        <DashboardLayout></DashboardLayout>
+        <ProtectedRoute><SocketProvider><DashboardLayout></DashboardLayout></SocketProvider></ProtectedRoute>
       
     ),
     children: [
@@ -71,7 +73,7 @@ export const router = createBrowserRouter([
         element: <BookHistory></BookHistory>
       },
       {
-        path: "/dashboard/bookingHistory/chat",
+        path: "/dashboard/bookingHistory/chat/:id",
         element: <ChatBox></ChatBox>
       },
       {
@@ -83,7 +85,7 @@ export const router = createBrowserRouter([
         element: <ShedualManagement></ShedualManagement>
       },
        {
-        path: "/dashboard/schedualManagement/bookingManagement",
+        path: "/dashboard/schedualManagement/bookingManagement/:id",
         element: <BookingManagement></BookingManagement>
       },
       {

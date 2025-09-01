@@ -34,12 +34,12 @@ const items = [
     icon: <TbUserCircle />,
     link: "/dashboard/customer",
   },
-  {
-    key: "report",
-    label: "User Report",
-    icon: <MdOutlineReport />,
-    link: "/dashboard/userReport",
-  },
+  // {
+  //   key: "report",
+  //   label: "User Report",
+  //   icon: <MdOutlineReport />,
+  //   link: "/dashboard/userReport",
+  // },
   {
     key: "barber",
     label: "Barber",
@@ -70,42 +70,48 @@ const items = [
     icon: <CiCoinInsert />,
     link: "/dashboard/transaction",
   },
-
-  {
-    key: "support",
-    label: "Support",
-    icon: <HiSupport />,
-    link: "/dashboard/support",
-  },
-  {
-    key: "settings",
-    label: "Settings",
+   {
+    key: "profile",
+    label: "Profile",
     icon: <MdOutlineSettings />,
     link: "/dashboard/Settings/profile",
-    children: [
-      {
-        key: "profile",
-        label: "Profile",
-        link: "/dashboard/Settings/profile",
-      },
-      {
-        key: "terms",
-        label: "Terms & Condition",
-        link: "/dashboard/Settings/Terms&Condition",
-      },
-      {
-        key: "privacy",
-        label: "Privacy Policy",
-        link: "/dashboard/Settings/PrivacyPolicy",
-      },
-      {
-        key: "faq",
-        label: "FAQ",
-        link: "/dashboard/Settings/FAQ",
-      },
-      
-    ],
   },
+
+  // {
+  //   key: "support",
+  //   label: "Support",
+  //   icon: <HiSupport />,
+  //   link: "/dashboard/support",
+  // },
+  // {
+  //   key: "settings",
+  //   label: "Settings",
+  //   icon: <MdOutlineSettings />,
+  //   link: "/dashboard/Settings/profile",
+  //   children: [
+  //     {
+  //       key: "profile",
+  //       label: "Profile",
+  //       link: "/dashboard/Settings/profile",
+  //     },
+  //     {
+  //       key: "terms",
+  //       label: "Terms & Condition",
+  //       link: "/dashboard/Settings/Terms&Condition",
+  //     },
+  //     {
+  //       key: "privacy",
+  //       label: "Privacy Policy",
+  //       link: "/dashboard/Settings/PrivacyPolicy",
+  //     },
+  //     {
+  //       key: "faq",
+  //       label: "FAQ",
+  //       link: "/dashboard/Settings/FAQ",
+  //     },
+      
+  //   ],
+  // },
 ];
 
 const SidBar = () => {
