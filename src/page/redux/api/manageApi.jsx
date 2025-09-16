@@ -89,7 +89,7 @@ getAllShedualeBarber: builder.query({
     if (all) {
 
       return {
-        url: `/job-applications/hired-barbers?limit=999999`, 
+        url: `/saloons/remaining-barbers-to-schedule`, 
         method: "GET",
       };
     }

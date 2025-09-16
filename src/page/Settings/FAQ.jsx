@@ -13,7 +13,6 @@ const FAQ = () => {
     { _id: 1, question: "What is React?", answer: "React is a JavaScript library for building user interfaces." },
     { _id: 2, question: "What is JSX?", answer: "JSX is a syntax extension for JavaScript recommended by React." }
   ]);
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState(null);

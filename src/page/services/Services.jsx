@@ -27,6 +27,8 @@ const [deleteSrvices] = useDeleteServicesOwnerMutation()
     setEditModal(true);
   };
 
+  
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };

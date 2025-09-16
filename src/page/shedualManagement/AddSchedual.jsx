@@ -20,6 +20,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
   const { data: schedualeBarber, isLoading } = useGetAllShedualeBarberQuery({
     all: true,
   });
+  console.log(schedualeBarber)
   const [addBarberManagement] = useAddBarberManagementMutation();
 
   const handleCancel = () => {
@@ -94,7 +95,7 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
             >
               {schedualeBarber?.data?.map((barber) => (
                 <Select.Option key={barber.barberId} value={barber.barberId}>
-                  {barber.barberFullName}
+                  {barber.barberName}
                 </Select.Option>
               ))}
             </Select>
