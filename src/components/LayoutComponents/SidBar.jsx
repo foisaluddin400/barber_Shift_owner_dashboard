@@ -58,6 +58,12 @@ const items = [
     icon: <CiCoinInsert />,
     link: "/dashboard/schedualManagement",
   },
+   {
+    key: "schedualDate",
+    label: "Schedule",
+    icon: <CiCoinInsert />,
+    link: "/dashboard/schedualDate",
+  },
   {
     key: "service",
     label: "service",

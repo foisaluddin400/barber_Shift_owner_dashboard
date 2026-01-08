@@ -27,6 +27,8 @@ import ShedualManagement from "../page/shedualManagement/ShedualManagement";
 import BookingManagement from "../page/shedualManagement/BookingManagement";
 import { SocketProvider } from "../context/ContextProvider";
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
+import Schedule from "../page/schedule/Schedule";
+import ScheduleDetails from "../page/schedule/ScheduleDetails";
 
 
 
@@ -83,6 +85,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/schedualManagement",
         element: <ShedualManagement></ShedualManagement>
+      },
+      {
+        path: "/dashboard/schedualDate/schedulaeDateDetails/:id",
+        element: <ScheduleDetails></ScheduleDetails>
+      },
+      {
+        path: "/dashboard/schedualDate",
+        element: <Schedule></Schedule>
       },
        {
         path: "/dashboard/schedualManagement/bookingManagement/:id",

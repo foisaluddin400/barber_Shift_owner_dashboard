@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Table, Input, Dropdown, Pagination } from "antd";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import { RxCrossCircled } from "react-icons/rx";
+import { SearchOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
 import { IoIosArrowDown } from "react-icons/io";
 import ManageBarber from "./ManageBarber";
@@ -10,34 +9,29 @@ import { useGetAllShedualeBarberQuery } from "../redux/api/manageApi";
 import { Link } from "react-router-dom";
 
 const ShedualManagement = () => {
-      const [searchTerm, setSearch] = useState("");
-  console.log(searchTerm)
+  const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  
-  const pageSize = 10;
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("personal");
+  const [selectedTab, setSelectedTab] = useState("schedule");
+  const [hireType, setHireType] = useState("non-hired");
 
-  const { data: schedualeBarber, isLoading } = useGetAllShedualeBarberQuery({
-        
-    searchTerm:searchTerm,
-     page: currentPage,
+  const pageSize = 10;
+
+  const { data, isLoading } = useGetAllShedualeBarberQuery({
+    all: hireType === "non-hired",
+    searchTerm,
+    page: currentPage,
     limit: pageSize,
   });
 
-  const items = [
-    { label: <button>Barber</button>, key: "0" },
-    { label: <button>Customer</button>, key: "1" },
-  ];
   const dataSource =
-    schedualeBarber?.data?.map((barber, index) => ({
+    data?.data?.map((barber, index) => ({
       key: index + 1,
-      barberFullName: barber.barberFullName,
-      id : barber.barberId,
+      barberFullName: barber.barberName,
+      id: barber.barberId,
       barberEmail: barber.barberEmail,
-      barberPhoneNumber: barber.barberPhoneNumber || "N/A",
-      startDate: new Date(barber.startDate).toLocaleDateString(),
-      hourlyRate: `$${barber.hourlyRate}`,
+      barberPhoneNumber: barber.barberPhone || "N/A",
+      barberAddress: barber.barberAddress,
       image: barber.barberImage,
     })) || [];
 
@@ -45,109 +39,145 @@ const ShedualManagement = () => {
     {
       title: "#",
       dataIndex: "key",
-      key: "key",
     },
+     ...(hireType === "non-hired"
+      ? [
     {
       title: "Barber Name",
       dataIndex: "barberFullName",
-      key: "barberFullName",
       render: (text, record) => (
-        <Link to={`/dashboard/schedualManagement/bookingManagement/${record?.id}`}><div className="flex items-center space-x-2">
-          <img
-            src={record.image}
-            alt="Barber"
-            className="w-8 h-8 rounded-full"
-          />
-          <span>{text}</span>
-        </div></Link>
+      
+          <div className="flex items-center gap-2">
+            <img
+              src={record.image}
+              alt="barber"
+              className="w-8 h-8 rounded-full"
+            />
+            <span>{text}</span>
+          </div>
+      
       ),
     },
+    ]
+      : []),
+          ...(hireType === "hired"
+      ? [
+    {
+      title: "Barber Name",
+      dataIndex: "barberFullName",
+      render: (text, record) => (
+        <Link
+          to={`/dashboard/schedualManagement/bookingManagement/${record.id}`}
+        >
+          <div className="flex items-center gap-2">
+            <img
+              src={record.image}
+              alt="barber"
+              className="w-8 h-8 rounded-full"
+            />
+            <span>{text}</span>
+          </div>
+        </Link>
+      ),
+    },
+    ]
+      : []),
     {
       title: "Email",
       dataIndex: "barberEmail",
-      key: "barberEmail",
     },
     {
-      title: "Phone Number",
+      title: "Phone",
       dataIndex: "barberPhoneNumber",
-      key: "barberPhoneNumber",
     },
-    {
-      title: "Start Date",
-      dataIndex: "startDate",
-      key: "startDate",
-    },
-    {
-      title: "Hourly Rate",
-      dataIndex: "hourlyRate",
-      key: "hourlyRate",
-    },
-    // {
-    //   title: "Action",
-    //   key: "action",
-    //   render: () => (
-    //     <div className="flex gap-2 text-xl">
-    //       <EditOutlined className="text-[#AB684D]" />
-    //       <RxCrossCircled className="text-[#AB684D]" />
-    //     </div>
-    //   ),
-    // },
-  ];
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-  return (
-    <div className="p-1">
-      <div className="flex justify-between">
-        <Navigate title={"Schedule Management"} />
-      </div>
 
-      <div className="flex gap-4 items-center mb-4">
-        <Dropdown menu={{ items }} trigger={["click"]}>
-          <button
-            className="flex gap-2 items-center border text-[#9C5F46] border-[#D17C51] p-1 px-3 rounded"
-            onClick={(e) => e.preventDefault()}
-          >
+    {
+      title: "Address",
+      dataIndex: "barberAddress",
+    },
+  ];
+
+  return (
+    <div className="p-2">
+      <Navigate title="Schedule Management" />
+
+      {/* FILTER BAR */}
+      <div className="flex gap-3 items-center my-4">
+        <Dropdown
+          menu={{
+            items: [
+              { label: "Week", key: "week" },
+              { label: "Month", key: "month" },
+            ],
+          }}
+        >
+          <button className="flex items-center gap-2 border border-[#D17C51] text-[#9C5F46] px-4 py-1 rounded">
             Week <IoIosArrowDown />
           </button>
         </Dropdown>
 
-        <div
-          onClick={() => setSelectedTab("personal")}
-          className={`py-2 px-5 border rounded border-[#D17C51] cursor-pointer ${
-            selectedTab === "personal" ? "bg-[#D17C51] text-white" : ""
+        <button
+          onClick={() => setSelectedTab("schedule")}
+          className={`px-5 py-2 border rounded ${
+            selectedTab === "schedule"
+              ? "bg-[#D17C51] text-white"
+              : "border-[#D17C51]"
           }`}
         >
           Schedule
-        </div>
+        </button>
 
-        <div
-          onClick={() => setSelectedTab("photo")}
-          className={`py-2 px-5 border rounded border-[#D17C51] cursor-pointer ${
-            selectedTab === "photo" ? "bg-[#D17C51] text-white" : ""
+        <button
+          onClick={() => setSelectedTab("manage")}
+          className={`px-5 py-2 border rounded ${
+            selectedTab === "manage"
+              ? "bg-[#D17C51] text-white"
+              : "border-[#D17C51]"
           }`}
         >
           Manage
-        </div>
+        </button>
       </div>
 
-      {selectedTab === "personal" && (
-        <div>
+      {selectedTab === "schedule" && (
+        <>
           <div className="flex justify-between mb-4">
             <button
-              className="bg-[#D17C51] px-5 py-2 text-white rounded"
+              className="bg-[#D17C51] text-white px-5 py-2 rounded"
               onClick={() => setOpenAddModal(true)}
             >
               + New Schedule
             </button>
+
             <Input
-            onChange={(e) => setSearch(e.target.value)}
               placeholder="Search"
               prefix={<SearchOutlined />}
-              className="w-64 px-4 py-2 rounded-lg bg-white"
+              className="w-64"
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
+          {/* HIRED FILTER */}
+          <div className="flex gap-3 mb-3">
+            <button
+              onClick={() => setHireType("non-hired")}
+              className={`px-4 py-1 border rounded ${
+                hireType === "non-hired" ? "bg-[#D17C51] text-white" : ""
+              }`}
+            >
+              Non-hired
+            </button>
+            <button
+              onClick={() => setHireType("hired")}
+              className={`px-4 py-1 border rounded ${
+                hireType === "hired" ? "bg-[#D17C51] text-white" : ""
+              }`}
+            >
+              Hired
+            </button>
+          </div>
+
+          {/* TABLE */}
           <Table
             dataSource={dataSource}
             columns={columns}
@@ -155,24 +185,25 @@ const ShedualManagement = () => {
             pagination={false}
             scroll={{ x: 800 }}
           />
-            <div className="mt-4 flex justify-center">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={schedualeBarber?.meta?.total || 0}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            
-          />
-        </div>
-        </div>
+
+          <div className="flex justify-center mt-4">
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={data?.meta?.total || 0}
+              onChange={(page) => setCurrentPage(page)}
+              showSizeChanger={false}
+            />
+          </div>
+        </>
       )}
 
-      {selectedTab === "photo" && <ManageBarber />}
+      {/* ================= MANAGE TAB ================= */}
+      {selectedTab === "manage" && <ManageBarber />}
 
       <AddSchedual
-        setOpenAddModal={setOpenAddModal}
         openAddModal={openAddModal}
+        setOpenAddModal={setOpenAddModal}
       />
     </div>
   );

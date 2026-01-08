@@ -3,7 +3,7 @@ import { baseApi } from "./baseApi";
 const businessApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // new
- getDasboard: builder.query({
+    getDasboard: builder.query({
       query: () => {
         return {
           url: `/saloons/dashboard`,
@@ -14,16 +14,25 @@ const businessApi = baseApi.injectEndpoints({
     }),
 
     getAllCustomerOwner: builder.query({
-      query: ({  page, limit, searchTerm }) => {
+      query: ({ page, limit, searchTerm, date, status, type }) => {
+        const params = new URLSearchParams();
+
+        if (page) params.append("page", page);
+        if (limit) params.append("limit", limit);
+        if (searchTerm) params.append("searchTerm", searchTerm);
+        if (date) params.append("date", date);
+        if (status) params.append("status", status);
+        if (type) params.append("type", type);
+
         return {
-          url: `/bookings/list?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+          url: `/bookings/list?${params.toString()}`,
           method: "GET",
         };
       },
       providesTags: ["updateProfile"],
     }),
 
-      getAllCustomerDashboard: builder.query({
+    getAllCustomerDashboard: builder.query({
       query: () => {
         return {
           url: `/bookings/list`,
@@ -33,7 +42,7 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-      getAllBookingHistory: builder.query({
+    getAllBookingHistory: builder.query({
       query: ({ status, page, limit, searchTerm }) => {
         return {
           url: `/saloons/booking-history?status=${status}&searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
@@ -43,8 +52,8 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-        getAllTreansactionOwner: builder.query({
-      query: ({  page, limit, searchTerm }) => {
+    getAllTreansactionOwner: builder.query({
+      query: ({ page, limit, searchTerm }) => {
         return {
           url: `/saloons/transactions?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
           method: "GET",
@@ -59,6 +68,17 @@ const businessApi = baseApi.injectEndpoints({
           url: `/saloons/manage-bookings`,
           method: "PATCH",
           body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    updateStatusCustomer: builder.mutation({
+      query: (body) => {
+        return {
+          url: `/saloons/manage-bookings`,
+          method: "PATCH",
+          body,
         };
       },
       invalidatesTags: ["updateProfile"],
@@ -84,23 +104,47 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-getAllShedualeBarber: builder.query({
-  query: ({ page, limit, searchTerm, all }) => {
-    if (all) {
 
-      return {
-        url: `/saloons/remaining-barbers-to-schedule`, 
-        method: "GET",
-      };
-    }
 
-    return {
-      url: `/job-applications/hired-barbers?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
-      method: "GET",
-    };
-  },
-  providesTags: ["updateProfile"],
-}),
+  getAllServicesOwnerSelect: builder.query({
+      query: ({ page, limit }) => {
+        return {
+          url: `/services?page=${page}&limit=${limit}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+
+
+    getAllShedualeBarberSelect: builder.query({
+      query: ({ page, limit }) => {
+        return {
+          url: `/saloons/remaining-barbers-to-schedule?page=${page}&limit=${limit}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getAllShedualeBarber: builder.query({
+      query: ({ page, limit, searchTerm, all }) => {
+        if (all) {
+          return {
+            url: `/saloons/remaining-barbers-to-schedule?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+            method: "GET",
+          };
+        }
+
+        return {
+          url: `/job-applications/hired-barbers?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
 
     addBarberManagement: builder.mutation({
       query: (data) => {
@@ -112,7 +156,7 @@ getAllShedualeBarber: builder.query({
       },
       invalidatesTags: ["updateProfile"],
     }),
-      
+
     updateServicesOwner: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -133,10 +177,31 @@ getAllShedualeBarber: builder.query({
       invalidatesTags: ["updateProfile"],
     }),
 
-        getSingleSheduale: builder.query({
+    getSingleSheduale: builder.query({
       query: ({ id }) => {
         return {
           url: `/barber-schedules/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getDatebarber: builder.query({
+      query: ({ adminId,barberId,date }) => {
+        return {
+          url: `/bookings/barbers/${adminId}/${barberId}?date=${date}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+    getScheduleDate: builder.query({
+      query: ({ id,status }) => {
+        return {
+          url: `/bookings/walking-in/barbers/${id}/${status}`,
           method: "GET",
         };
       },
@@ -541,6 +606,17 @@ getAllShedualeBarber: builder.query({
       invalidatesTags: ["updateProfile"],
     }),
 
+     AddQueue: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/bookings",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
     deleteAdminAccess: builder.mutation({
       query: (id) => {
         return {
@@ -614,9 +690,15 @@ export const {
   useUpdateStatusOwnerMutation,
   useGetAllShedualeBarberQuery,
   useGetSingleShedualeQuery,
- useAddBarberManagementMutation,
- useGetDasboardQuery,
- useGetAllTreansactionOwnerQuery,
- useGetAllBookingHistoryQuery,
- useGetAllCustomerDashboardQuery
+  useAddBarberManagementMutation,
+  useGetDasboardQuery,
+  useGetAllTreansactionOwnerQuery,
+  useGetAllBookingHistoryQuery,
+  useGetAllCustomerDashboardQuery,
+  useUpdateStatusCustomerMutation,
+  useGetAllShedualeBarberSelectQuery,
+  useGetScheduleDateQuery,
+  useGetDatebarberQuery,
+  useAddQueueMutation,
+  useGetAllServicesOwnerSelectQuery
 } = businessApi;

@@ -1,9 +1,9 @@
 import { Form, Modal, Select, TimePicker, Switch, message } from "antd";
 import React from "react";
 import dayjs from "dayjs";
-import { useAddBarberManagementMutation, useGetAllShedualeBarberQuery } from "../redux/api/manageApi";
+import { useAddBarberManagementMutation, useGetAllShedualeBarberQuery, useGetAllShedualeBarberSelectQuery } from "../redux/api/manageApi";
 
-const format = "hh:mm A"; // AM/PM সহ
+const format = "hh:mm A"; 
 
 const weekDays = [
   "sunday",
@@ -17,8 +17,10 @@ const weekDays = [
 
 const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
   const [form] = Form.useForm();
-  const { data: schedualeBarber, isLoading } = useGetAllShedualeBarberQuery({
-    all: true,
+  const { data: schedualeBarber, isLoading } = useGetAllShedualeBarberSelectQuery({
+    
+     page: 1,
+    limit: 100000,
   });
   console.log(schedualeBarber)
   const [addBarberManagement] = useAddBarberManagementMutation();
@@ -46,8 +48,10 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
     });
 
     const data = {
+
       barberId: values.barberId,
       schedules,
+      type:values?.type
     };
 
     console.log("Final Payload:", data);
@@ -98,6 +102,16 @@ const AddSchedual = ({ openAddModal, setOpenAddModal }) => {
                   {barber.barberName}
                 </Select.Option>
               ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Schedule Type"
+            name="type"
+            rules={[{ required: true, message: "Please select Type" }]}
+          >
+            <Select style={{ height: "45px" }} placeholder="Select Type">
+              <Option value="BOOKING">Booking</Option>
+              <Option value="QUEUE">Queue</Option>
             </Select>
           </Form.Item>
 

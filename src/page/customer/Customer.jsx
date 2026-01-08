@@ -1,32 +1,61 @@
-import { Table, Input, Pagination } from "antd";
+import { Table, Input, Pagination, Select, DatePicker, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
 import { useState } from "react";
-import { useGetAllCustomerOwnerQuery } from "../redux/api/manageApi";
-import AddCustomer from "./AddCustomer";
+import dayjs from "dayjs";
+import { useGetAllCustomerOwnerQuery, useUpdateStatusCustomerMutation } from "../redux/api/manageApi";
+const STATUS_OPTIONS = [
+  { value: "PENDING", label: "Pending" },
+  { value: "CONFIRMED", label: "Confirmed" },
+  { value: "CANCELLED", label: "Cancelled" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "RESCHEDULED", label: "Rescheduled" },
+];
 
 const Customer = () => {
-  const [openAddModal, setOpenAddModal] = useState(false);
-      const [searchTerm, setSearch] = useState("");
-    console.log(searchTerm)
-    const [currentPage, setCurrentPage] = useState(1);
-    
-    const pageSize = 10;
-  const { data: customerData } = useGetAllCustomerOwnerQuery({ 
-    searchTerm:searchTerm,
-     page: currentPage,
-    limit: pageSize,}); 
-console.log(customerData)
-     const handlePageChange = (page) => {
+  const [searchTerm, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+const [updateStatus] = useUpdateStatusCustomerMutation()
+  // ✅ NEW STATES
+  const [activeTab, setActiveTab] = useState("ALL");
+  const [status, setStatus] = useState(null);
+  const [date, setDate] = useState(null);
+
+  const pageSize = 10;
+
+  // ✅ API QUERY PARAMS
+  const { data: customerData } = useGetAllCustomerOwnerQuery({
+    page: currentPage,
+    limit: pageSize,
+    searchTerm: searchTerm || undefined,
+    type: activeTab !== "ALL" ? activeTab : undefined,
+    status: status || undefined,
+    date: activeTab === "QUEUE" ? date : undefined,
+  });
+
+  const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-  
+const handleStatusChange = async (bookingId, status) => {
+  try {
+    const res = await updateStatus({
+      bookingId,
+      status,
+    }).unwrap();
+    message.success(res?.message)
+  } catch (error) {
+    message.error(error?.data?.message)
+    console.error("Status update failed", error);
+  }
+};
+
   const columns = [
     {
       title: "SI No",
       key: "siNo",
       render: (_, __, index) => index + 1,
     },
+
     {
       title: "Customer Name",
       dataIndex: "customerName",
@@ -57,6 +86,7 @@ console.log(customerData)
         </div>
       ),
     },
+   
     {
       title: "Booking Date",
       dataIndex: "bookingDate",
@@ -65,87 +95,118 @@ console.log(customerData)
     },
     {
       title: "Time",
-      key: "time",
       render: (_, record) => `${record.startTime} - ${record.endTime}`,
     },
     {
       title: "Total Price",
       dataIndex: "totalPrice",
-      key: "totalPrice",
       render: (price) => `$${price}`,
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <span
-          className={`px-2 py-1 rounded ${
-            status === "CONFIRMED"
-              ? "bg-green-200 text-green-800"
-              : "bg-gray-200 text-gray-800"
-          }`}
-        >
-          {status}
-        </span>
-      ),
-    },
+   {
+  title: "Status",
+  dataIndex: "status",
+  key: "status",
+  render: (status, record) => (
+    <Select
+      value={status}
+      style={{ width: 150 }}
+      options={STATUS_OPTIONS}
+      onChange={(value) =>
+        handleStatusChange(record.bookingId, value)
+      }
+    />
+  ),
+},
+
   ];
 
-  // Use backend data if exists
   const tableData = customerData?.data || [];
 
   return (
-    <div className="p-1">
-      <div className="flex justify-between">
-        <div className="flex">
-          <Navigate title={"Customers"} />
-          <h1 className="pl-2 font-semibold text-xl">
-            {`(${tableData.length})`}
-          </h1>
+    <div className="bg-white p-3 h-[87vh]">
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <div className="flex items-center">
+          <Navigate title="Customers" />
+          
         </div>
-        <Input
-        onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search"
-          prefix={<SearchOutlined />}
-          className="w-64 px-4 py-2 rounded-lg bg-white"
+
+        {/* FILTERS */}
+        <div className="flex gap-4 items-center">
+          {activeTab === "QUEUE" && (
+            <DatePicker
+              onChange={(value) =>
+                setDate(value ? dayjs(value).format("YYYY-MM-DD") : null)
+              }
+            />
+          )}
+
+          {/* Status Select */}
+          <Select
+            value={status}
+            onChange={(value) => setStatus(value || null)}
+            allowClear
+            placeholder="Status"
+            style={{ width: 150, height: "42px" }}
+            options={[
+              { value: "PENDING", label: "Pending" },
+              { value: "STARTED", label: "Started" },
+              { value: "CONFIRMED", label: "Confirmed" },
+              { value: "ENDED", label: "Ended" },
+            ]}
+          />
+
+          {/* Search */}
+          <Input
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search"
+            prefix={<SearchOutlined />}
+            className="w-64"
+          />
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div className="flex gap-4 mt-4">
+        {["ALL", "BOOKING", "QUEUE"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => {
+              setActiveTab(tab);
+              setStatus(null);
+              setDate(null);
+            }}
+            className={`px-4 py-2 rounded ${
+              activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
+            }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* TABLE */}
+      <div className="mt-4 rounded-md overflow-hidden">
+        <Table
+          columns={columns}
+          dataSource={tableData}
+          rowKey="bookingId"
+          pagination={false}
+          rowClassName="border-b border-gray-300"
+          scroll={{ x: 800 }}
         />
       </div>
 
-      <div className="p-2">
-        {/* <button
-          className="bg-[#D17C51] px-5 py-2 text-white rounded mb-4"
-          onClick={() => setOpenAddModal(true)}
-        >
-          + New Services
-        </button> */}
-
-        <div className="rounded-md overflow-hidden">
-          <Table
-            columns={columns}
-            dataSource={tableData}
-            rowKey="bookingId" // still unique key needed
-            pagination={false}
-            rowClassName="border-b border-gray-300"
-            scroll={{ x: 800 }}
-          />
-        </div>
-          <div className="mt-4 flex justify-center">
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={customerData?.meta?.total || 0}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            
-          />
-        </div>
+      {/* PAGINATION */}
+      <div className="mt-4 flex justify-center">
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={customerData?.meta?.total || 0}
+          onChange={handlePageChange}
+          showSizeChanger={false}
+        />
       </div>
-{/* 
-      <AddCustomer
-        setOpenAddModal={setOpenAddModal}
-        openAddModal={openAddModal}
-      /> */}
     </div>
   );
 };
