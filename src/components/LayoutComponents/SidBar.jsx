@@ -48,7 +48,7 @@ const items = [
   },
   {
     key: "history",
-    label: "Booking History",
+    label: "History",
     icon: <RiBookletLine />,
     link: "/dashboard/bookingHistory",
   },
@@ -60,7 +60,7 @@ const items = [
   },
    {
     key: "schedualDate",
-    label: "Schedule",
+    label: "Upcoming Dates",
     icon: <CiCoinInsert />,
     link: "/dashboard/schedualDate",
   },

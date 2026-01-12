@@ -83,13 +83,15 @@ const Schedule = () => {
   return (
     <div className="p-4 bg-white rounded-lg">
       <div className="flex justify-between mb-4">
-        <Navigate title={"Schedule Date"} />
+        <Navigate title={"Appointment Date"} />
+        {status === "QUEUE" && (
         <button
           className="bg-[#D17C51] px-3 py-2 rounded text-white mb-4"
           onClick={() => setOpenAddModal(true)}
         >
           Add Queue
         </button>
+            )}
       </div>
 
       <div className="flex gap-4 mb-4">

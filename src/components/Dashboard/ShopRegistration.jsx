@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, message } from "antd";
+import { Table, Button, message, Popconfirm } from "antd";
 import { Link } from "react-router-dom";
 import { TbRosetteDiscountCheckFilled } from "react-icons/tb";
 import { BiMessageRoundedDots } from "react-icons/bi";
@@ -14,12 +14,12 @@ const ShopRegistration = () => {
   const [updateStatusOwner] = useUpdateStatusOwnerMutation();
 
   const dataSource =
-    bookingData?.data?.map((booking, index) => ({
+    bookingData?.data?.slice(0,5)?.map((booking, index) => ({
       key: index + 1,
       id: booking.bookingId,
       customerId: booking.customerId,
       customerName: booking.customerName,
-      customerImage: booking.customerImage,
+      customerImage: booking.customerImage ||  "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
       email: booking.customerEmail,
       phone: booking.customerPhone || "N/A",
       date: new Date(booking.bookingDate).toLocaleDateString(),
@@ -69,7 +69,11 @@ const ShopRegistration = () => {
         <div className="flex items-center space-x-2">
           {record.customerImage && (
             <img
-              src={record.customerImage}
+              src={record.customerImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+
+ 
+
+
               alt={text}
               className="w-8 h-8 rounded-full"
             />
@@ -118,17 +122,29 @@ const ShopRegistration = () => {
       key: "action",
       render: (_, record) => (
         <div className="flex gap-2 text-xl">
+            <Popconfirm
+            title="Are you sure to confirm this booking?"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => handleAccept(record?.id)}
+          >
           <TbRosetteDiscountCheckFilled
-            onClick={() => handleAccept(record?.id)}
+         
             className="text-green-500 cursor-pointer"
-          />
+          /></Popconfirm>
           <Link to={`/dashboard/bookingHistory/chat/${record?.customerId}`}>
             <BiMessageRoundedDots className="text-[#AB684D] cursor-pointer" />
           </Link>
+            <Popconfirm
+            title="Are you sure to Cancel this booking?"
+            okText="Yes"
+            cancelText="No"
+            onConfirm={() => handleRemove(record?.id)}
+          >
           <RxCrossCircled
-            onClick={() => handleRemove(record?.id)}
+            
             className="text-[#AB684D] cursor-pointer"
-          />
+          /></Popconfirm>
         </div>
       ),
     },
@@ -138,7 +154,7 @@ const ShopRegistration = () => {
     <div className="p-3 bg-white mt-4">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold pb-2">Recent Booking Request</h2>
-        <Link to={"/dashboard/allShop"}>
+        <Link to={"/dashboard/customer"}>
           <button className="text-[#AB684D]">View all</button>
         </Link>
       </div>

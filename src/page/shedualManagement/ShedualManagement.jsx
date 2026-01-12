@@ -40,47 +40,45 @@ const ShedualManagement = () => {
       title: "#",
       dataIndex: "key",
     },
-     ...(hireType === "non-hired"
+    ...(hireType === "non-hired"
       ? [
-    {
-      title: "Barber Name",
-      dataIndex: "barberFullName",
-      render: (text, record) => (
-      
-          <div className="flex items-center gap-2">
-            <img
-              src={record.image}
-              alt="barber"
-              className="w-8 h-8 rounded-full"
-            />
-            <span>{text}</span>
-          </div>
-      
-      ),
-    },
-    ]
+          {
+            title: "Barber Name",
+            dataIndex: "barberFullName",
+            render: (text, record) => (
+              <div className="flex items-center gap-2">
+                <img
+                  src={record.image}
+                  alt="barber"
+                  className="w-8 h-8 rounded-full"
+                />
+                <span>{text}</span>
+              </div>
+            ),
+          },
+        ]
       : []),
-          ...(hireType === "hired"
+    ...(hireType === "hired"
       ? [
-    {
-      title: "Barber Name",
-      dataIndex: "barberFullName",
-      render: (text, record) => (
-        <Link
-          to={`/dashboard/schedualManagement/bookingManagement/${record.id}`}
-        >
-          <div className="flex items-center gap-2">
-            <img
-              src={record.image}
-              alt="barber"
-              className="w-8 h-8 rounded-full"
-            />
-            <span>{text}</span>
-          </div>
-        </Link>
-      ),
-    },
-    ]
+          {
+            title: "Barber Name",
+            dataIndex: "barberFullName",
+            render: (text, record) => (
+              <Link
+                to={`/dashboard/schedualManagement/bookingManagement/${record.id}`}
+              >
+                <div className="flex items-center gap-2">
+                  <img
+                    src={record.image}
+                    alt="barber"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span>{text}</span>
+                </div>
+              </Link>
+            ),
+          },
+        ]
       : []),
     {
       title: "Email",
@@ -98,105 +96,70 @@ const ShedualManagement = () => {
   ];
 
   return (
-    <div className="p-2">
-      <Navigate title="Schedule Management" />
+    <div className="bg-white p-3 h-[87vh]">
+      
 
       {/* FILTER BAR */}
-      <div className="flex gap-3 items-center my-4">
-        <Dropdown
-          menu={{
-            items: [
-              { label: "Week", key: "week" },
-              { label: "Month", key: "month" },
-            ],
-          }}
-        >
-          <button className="flex items-center gap-2 border border-[#D17C51] text-[#9C5F46] px-4 py-1 rounded">
-            Week <IoIosArrowDown />
+      <div className="flex justify-between  items-center ">
+        <Navigate title="Schedule Management" />
+        <div className="flex gap-4 justify-between mb-4">
+        
+
+          <Input
+            placeholder="Search"
+            prefix={<SearchOutlined />}
+            className="w-64"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+            <button
+            className="bg-[#D17C51] text-white px-5 py-2 rounded"
+            onClick={() => setOpenAddModal(true)}
+          >
+            + New Schedule
           </button>
-        </Dropdown>
-
-        <button
-          onClick={() => setSelectedTab("schedule")}
-          className={`px-5 py-2 border rounded ${
-            selectedTab === "schedule"
-              ? "bg-[#D17C51] text-white"
-              : "border-[#D17C51]"
-          }`}
-        >
-          Schedule
-        </button>
-
-        <button
-          onClick={() => setSelectedTab("manage")}
-          className={`px-5 py-2 border rounded ${
-            selectedTab === "manage"
-              ? "bg-[#D17C51] text-white"
-              : "border-[#D17C51]"
-          }`}
-        >
-          Manage
-        </button>
+        </div>
       </div>
 
-      {selectedTab === "schedule" && (
-        <>
-          <div className="flex justify-between mb-4">
-            <button
-              className="bg-[#D17C51] text-white px-5 py-2 rounded"
-              onClick={() => setOpenAddModal(true)}
-            >
-              + New Schedule
-            </button>
+      <>
+        {/* HIRED FILTER */}
+        <div className="flex gap-3 mb-3">
+          <button
+            onClick={() => setHireType("non-hired")}
+            className={`px-4 py-1 border rounded ${
+              hireType === "non-hired" ? "bg-[#D17C51] text-white" : ""
+            }`}
+          >
+            Not scheduled
+          </button>
+          <button
+            onClick={() => setHireType("hired")}
+            className={`px-4 py-1 border rounded ${
+              hireType === "hired" ? "bg-[#D17C51] text-white" : ""
+            }`}
+          >
+            Scheduled
+          </button>
+        </div>
 
-            <Input
-              placeholder="Search"
-              prefix={<SearchOutlined />}
-              className="w-64"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
+        {/* TABLE */}
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          loading={isLoading}
+          pagination={false}
+          scroll={{ x: 800 }}
+        />
 
-          {/* HIRED FILTER */}
-          <div className="flex gap-3 mb-3">
-            <button
-              onClick={() => setHireType("non-hired")}
-              className={`px-4 py-1 border rounded ${
-                hireType === "non-hired" ? "bg-[#D17C51] text-white" : ""
-              }`}
-            >
-              Non-hired
-            </button>
-            <button
-              onClick={() => setHireType("hired")}
-              className={`px-4 py-1 border rounded ${
-                hireType === "hired" ? "bg-[#D17C51] text-white" : ""
-              }`}
-            >
-              Hired
-            </button>
-          </div>
-
-          {/* TABLE */}
-          <Table
-            dataSource={dataSource}
-            columns={columns}
-            loading={isLoading}
-            pagination={false}
-            scroll={{ x: 800 }}
+        <div className="flex justify-center mt-4">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={data?.meta?.total || 0}
+            onChange={(page) => setCurrentPage(page)}
+            showSizeChanger={false}
           />
-
-          <div className="flex justify-center mt-4">
-            <Pagination
-              current={currentPage}
-              pageSize={pageSize}
-              total={data?.meta?.total || 0}
-              onChange={(page) => setCurrentPage(page)}
-              showSizeChanger={false}
-            />
-          </div>
-        </>
-      )}
+        </div>
+      </>
 
       {/* ================= MANAGE TAB ================= */}
       {selectedTab === "manage" && <ManageBarber />}

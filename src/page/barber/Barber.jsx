@@ -33,7 +33,7 @@ export const Barber = () => {
         <Link to={"/dashboard/barber/barberDetails"}>
           <div className="flex items-center gap-2">
             <img
-              src={record.barberImage || "https://via.placeholder.com/40"}
+              src={record.barberImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
               alt="avatar"
               className="w-8 h-8 rounded-full"
             />
@@ -64,10 +64,8 @@ export const Barber = () => {
       <div className="p-1">
         <div className="flex justify-between">
           <div className="flex">
-            <Navigate title={"Barber"} />
-            <h1 className="pl-2 font-semibold text-xl">
-              {`(${tableData.length})`}
-            </h1>
+            <Navigate title={"Barbers"} />
+           
           </div>
           <Input
              onChange={(e) => setSearch(e.target.value)}

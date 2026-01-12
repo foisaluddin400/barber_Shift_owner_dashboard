@@ -107,8 +107,8 @@ const BookHistory = () => {
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <div className="flex items-center">
-          <Navigate title="Customers" />
-          <h1 className="pl-2 font-semibold text-xl">({tableData.length})</h1>
+          <Navigate title="Previous Bookings" />
+          
         </div>
 
         {/* FILTERS */}

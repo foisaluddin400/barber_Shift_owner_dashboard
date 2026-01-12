@@ -149,7 +149,7 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <div className="bg-[#AB684D]  text-white pt-5">
+    <div className=" bg-[#AB684D] text-white pt-5">
       <div className="flex justify-between">
         <div className="lg:hidden ">
           <div className="py-3 pl-4">
@@ -179,7 +179,7 @@ const Header = () => {
               open={open}
               key={placement}
             >
-              <div className="bg-[#AB684D] custom-sidebar h-[100vh] -m-6">
+              <div className="bg-[#AB684D] custom-sidebar -m-6">
                 <div className="custom-sidebar-logo flex justify-center ">
                   <img src={logo} alt="Logo" className="w-[40px]" />
                 </div>
@@ -189,7 +189,7 @@ const Header = () => {
                     <div key={item.key}>
                       <Link
                         to={item.link}
-                        className={`menu-item my-4 mx-5 py-3 px-3 flex items-center cursor-pointer ${
+                        className={`menu-item my-4 mx-2 py-3 px-3 flex items-center cursor-pointer ${
                           selectedKey === item.key
                            ? "bg-[#D17C51] text-[white] rounded-tr-md rounded-br-md"
                     : "bg-white text-[#AB684D] rounded-tr-md rounded-br-md hover:bg-gray-200"
@@ -221,7 +221,7 @@ const Header = () => {
 
                       {item.children && (
                         <div
-                          className={`children-menu bg-white  -my-2 mx-5  text-black transition-all duration-300 ${
+                          className={`children-menu bg-white  -my-2 mx-2  text-black transition-all duration-300 ${
                             expandedKeys.includes(item.key) ? "expanded" : ""
                           }`}
                           style={{
@@ -260,7 +260,7 @@ const Header = () => {
                 </div>
 
                
-                <div className=" w-full p-4 ">
+                <div className=" w-full p-2 pt-4 ">
                   <button
                     onClick={handleLogout}
                     className="w-full flex bg-white text-start rounded-md text-black p-3"

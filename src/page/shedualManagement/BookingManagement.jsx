@@ -83,7 +83,7 @@ const BookingManagement = () => {
         >
           Schedule
         </div>
-
+{/* 
         <div
           onClick={() => setSelectedTab("photo")}
           className={`py-2 px-5 border rounded border-[#D17C51] cursor-pointer ${
@@ -91,7 +91,7 @@ const BookingManagement = () => {
           }`}
         >
           Manage
-        </div>
+        </div> */}
       </div>
 
       {selectedTab === "personal" && (

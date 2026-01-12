@@ -63,7 +63,7 @@ const handleStatusChange = async (bookingId, status) => {
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={record.customerImage || "https://via.placeholder.com/40"}
+            src={record.customerImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
             alt="avatar"
             className="w-8 h-8 rounded-full"
           />
@@ -78,7 +78,7 @@ const handleStatusChange = async (bookingId, status) => {
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={record.barberImage || "https://via.placeholder.com/40"}
+            src={record.barberImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
             alt="barber"
             className="w-8 h-8 rounded-full"
           />
