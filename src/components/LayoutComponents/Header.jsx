@@ -244,7 +244,7 @@ const Header = () => {
                               }`}
                               onClick={() => {
                                 setSelectedKey(child.key); 
-                                setExpandedKeys([]); // Collapse all expanded items
+                                setExpandedKeys([]); // Collapse all expandedd items
                                 onClose(); // Close the drawer navigation
                               }}
                             >
