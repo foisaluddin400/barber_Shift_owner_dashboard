@@ -100,7 +100,7 @@ const ShedualManagement = () => {
       
 
       {/* FILTER BAR */}
-      <div className="flex justify-between  items-center ">
+      <div className="md:flex justify-between  items-center ">
         <Navigate title="Schedule Management" />
         <div className="flex gap-4 justify-between mb-4">
         

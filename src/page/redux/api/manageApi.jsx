@@ -94,6 +94,16 @@ const businessApi = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
+      getSingleBarber: builder.query({
+      query: ({ id }) => {
+        return {
+          url: `/barbers/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
     getAllServicesOwner: builder.query({
       query: ({ page, limit, searchTerm }) => {
         return {
@@ -680,6 +690,7 @@ export const {
   useUpdateSupportMutation,
   useGetSingleAllBarberQuery,
   useGetAllSubscriberQuery,
+  useGetSingleBarberQuery,
   //new
   useGetAllCustomerOwnerQuery,
   useGetAllBarberOwnerQuery,

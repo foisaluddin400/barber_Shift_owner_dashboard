@@ -3,7 +3,10 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Navigate } from "../../Navigate";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { useGetAllCustomerOwnerQuery, useUpdateStatusCustomerMutation } from "../redux/api/manageApi";
+import {
+  useGetAllCustomerOwnerQuery,
+  useUpdateStatusCustomerMutation,
+} from "../redux/api/manageApi";
 const STATUS_OPTIONS = [
   { value: "PENDING", label: "Pending" },
   { value: "CONFIRMED", label: "Confirmed" },
@@ -15,9 +18,9 @@ const STATUS_OPTIONS = [
 const Customer = () => {
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-const [updateStatus] = useUpdateStatusCustomerMutation()
+  const [updateStatus] = useUpdateStatusCustomerMutation();
   // ✅ NEW STATES
-  const [activeTab, setActiveTab] = useState("ALL");
+  const [activeTab, setActiveTab] = useState("BOOKING");
   const [status, setStatus] = useState(null);
   const [date, setDate] = useState(null);
 
@@ -36,18 +39,18 @@ const [updateStatus] = useUpdateStatusCustomerMutation()
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-const handleStatusChange = async (bookingId, status) => {
-  try {
-    const res = await updateStatus({
-      bookingId,
-      status,
-    }).unwrap();
-    message.success(res?.message)
-  } catch (error) {
-    message.error(error?.data?.message)
-    console.error("Status update failed", error);
-  }
-};
+  const handleStatusChange = async (bookingId, status) => {
+    try {
+      const res = await updateStatus({
+        bookingId,
+        status,
+      }).unwrap();
+      message.success(res?.message);
+    } catch (error) {
+      message.error(error?.data?.message);
+      console.error("Status update failed", error);
+    }
+  };
 
   const columns = [
     {
@@ -63,7 +66,10 @@ const handleStatusChange = async (bookingId, status) => {
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={record.customerImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+            src={
+              record.customerImage ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            }
             alt="avatar"
             className="w-8 h-8 rounded-full"
           />
@@ -78,7 +84,10 @@ const handleStatusChange = async (bookingId, status) => {
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
-            src={record.barberImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
+            src={
+              record.barberImage ||
+              "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+            }
             alt="barber"
             className="w-8 h-8 rounded-full"
           />
@@ -86,7 +95,7 @@ const handleStatusChange = async (bookingId, status) => {
         </div>
       ),
     },
-   
+
     {
       title: "Booking Date",
       dataIndex: "bookingDate",
@@ -102,22 +111,19 @@ const handleStatusChange = async (bookingId, status) => {
       dataIndex: "totalPrice",
       render: (price) => `$${price}`,
     },
-   {
-  title: "Status",
-  dataIndex: "status",
-  key: "status",
-  render: (status, record) => (
-    <Select
-      value={status}
-      style={{ width: 150 }}
-      options={STATUS_OPTIONS}
-      onChange={(value) =>
-        handleStatusChange(record.bookingId, value)
-      }
-    />
-  ),
-},
-
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status, record) => (
+        <Select
+          value={status}
+          style={{ width: 150 }}
+          options={STATUS_OPTIONS}
+          onChange={(value) => handleStatusChange(record.bookingId, value)}
+        />
+      ),
+    },
   ];
 
   const tableData = customerData?.data || [];
@@ -125,10 +131,9 @@ const handleStatusChange = async (bookingId, status) => {
   return (
     <div className="bg-white p-3 h-[87vh]">
       {/* HEADER */}
-      <div className="flex justify-between items-center">
+      <div className="md:flex justify-between items-center">
         <div className="flex items-center">
           <Navigate title="Customers" />
-          
         </div>
 
         {/* FILTERS */}
@@ -160,15 +165,16 @@ const handleStatusChange = async (bookingId, status) => {
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
+            
             prefix={<SearchOutlined />}
-            className="w-64"
+               style={{ width: 150, height: "42px" }}
           />
         </div>
       </div>
 
       {/* TABS */}
       <div className="flex gap-4 mt-4">
-        {["ALL", "BOOKING", "QUEUE"].map((tab) => (
+        {[ "BOOKING", "QUEUE"].map((tab) => (
           <button
             key={tab}
             onClick={() => {

@@ -96,14 +96,14 @@ console.log(searchTerm)
 
   return (
     <div>
-      <div className="p-1">
+      <div className="bg-white p-3 h-[87vh]">
         <div className="flex justify-between">
           <Navigate title={"Transaction"} />
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             prefix={<SearchOutlined />}
-            className="w-64 px-4 py-2 rounded-lg bg-white"
+              style={{ width: 150, height: "42px" }}
           />
         </div>
 

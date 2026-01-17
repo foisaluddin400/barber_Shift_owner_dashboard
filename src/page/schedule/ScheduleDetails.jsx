@@ -6,6 +6,7 @@ import {
   useGetDatebarberQuery,
   useGetProfileQuery,
 } from "../redux/api/manageApi";
+import { Navigate } from "../../Navigate";
 
 const ScheduleDetails = () => {
   const { data: profileData } = useGetProfileQuery();
@@ -41,7 +42,8 @@ const ScheduleDetails = () => {
   }, []);
 
   return (
-    <div className="mt-8">
+    <div className="bg-white p-3 h-[87vh]">
+      <Navigate title={'Schedule Date'}></Navigate>
       {/* ================= Calendar ================= */}
       <div className="flex gap-3 flex-wrap mb-6">
         {calendarDays.map((d) => (

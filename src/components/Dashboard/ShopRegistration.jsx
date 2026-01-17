@@ -164,6 +164,7 @@ const ShopRegistration = () => {
         pagination={false}
         scroll={{ x: 800 }}
         loading={isLoading}
+       
       />
     </div>
   );

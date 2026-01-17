@@ -196,6 +196,7 @@ const BarberOwner = () => {
             dataSource={data}
             pagination={false}
             rowClassName=" border-b border-gray-300"
+            scroll={{ x: 900 }}
           />
         </div>
       </div>

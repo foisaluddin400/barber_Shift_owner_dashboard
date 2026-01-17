@@ -105,7 +105,7 @@ const BookHistory = () => {
   return (
     <div className="bg-white p-3 h-[87vh]">
       {/* HEADER */}
-      <div className="flex justify-between items-center">
+      <div className="md:flex justify-between items-center">
         <div className="flex items-center">
           <Navigate title="Previous Bookings" />
           
@@ -140,7 +140,7 @@ const BookHistory = () => {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             prefix={<SearchOutlined />}
-            className="w-64"
+              style={{ width: 150, height: "42px" }}
           />
         </div>
       </div>

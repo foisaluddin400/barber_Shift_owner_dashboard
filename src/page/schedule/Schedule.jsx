@@ -81,7 +81,7 @@ const Schedule = () => {
   ];
 
   return (
-    <div className="p-4 bg-white rounded-lg">
+    <div className="bg-white p-3 h-[87vh]">
       <div className="flex justify-between mb-4">
         <Navigate title={"Appointment Date"} />
         {status === "QUEUE" && (

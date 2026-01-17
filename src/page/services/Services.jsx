@@ -4,7 +4,10 @@ import { SearchOutlined } from "@ant-design/icons";
 import AddServices from "./AddServices";
 import EditServices from "./EditServices";
 import { useState } from "react";
-import { useDeleteServicesOwnerMutation, useGetAllServicesOwnerQuery } from "../redux/api/manageApi";
+import {
+  useDeleteServicesOwnerMutation,
+  useGetAllServicesOwnerQuery,
+} from "../redux/api/manageApi";
 
 const Services = () => {
   const [searchTerm, setSearch] = useState("");
@@ -16,18 +19,16 @@ const Services = () => {
     page: currentPage,
     limit: pageSize,
   });
-  console.log(services)
+  console.log(services);
 
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-const [deleteSrvices] = useDeleteServicesOwnerMutation()
+  const [deleteSrvices] = useDeleteServicesOwnerMutation();
   const handleEdit = (record) => {
     setSelectedUser(record);
     setEditModal(true);
   };
-
-  
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -46,7 +47,7 @@ const [deleteSrvices] = useDeleteServicesOwnerMutation()
       dataIndex: "name",
       key: "name",
     },
-       {
+    {
       title: "Avilable To",
       dataIndex: "availableTo",
       key: "availableTo",
@@ -68,7 +69,7 @@ const [deleteSrvices] = useDeleteServicesOwnerMutation()
       key: "actions",
       render: (_, record) => (
         <div className="flex gap-4">
-          <Button onClick={() => handleDeleteFaq(record?.id)} type="link" >
+          <Button onClick={() => handleDeleteFaq(record?.id)} type="link">
             Delete
           </Button>
           <Button type="link" onClick={() => handleEdit(record)}>
@@ -80,14 +81,14 @@ const [deleteSrvices] = useDeleteServicesOwnerMutation()
   ];
 
   return (
-    <div className="p-1">
-      <div className="flex justify-between mb-4">
+    <div className="bg-white p-3 h-[87vh]">
+      <div className="md:flex justify-between mb-4">
         <Navigate title={"Services"} />
         <Input
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search"
           prefix={<SearchOutlined />}
-          className="w-64 px-4 py-2 rounded-lg bg-white"
+           style={{ width: 250, height: "42px" }}
         />
       </div>
 
@@ -104,6 +105,7 @@ const [deleteSrvices] = useDeleteServicesOwnerMutation()
         rowKey="id"
         loading={isLoading}
         pagination={false}
+        scroll={{ x: 900 }}
       />
 
       <div className="mt-4 flex justify-center">
@@ -116,7 +118,10 @@ const [deleteSrvices] = useDeleteServicesOwnerMutation()
         />
       </div>
 
-      <AddServices openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} />
+      <AddServices
+        openAddModal={openAddModal}
+        setOpenAddModal={setOpenAddModal}
+      />
       <EditServices
         editModal={editModal}
         setEditModal={setEditModal}

@@ -15,7 +15,7 @@ export const Barber = () => {
     searchTerm:searchTerm,
      page: currentPage,
     limit: pageSize,}); 
-
+console.log(barberData)
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -30,7 +30,7 @@ export const Barber = () => {
       dataIndex: "barberName",
       key: "barberName",
       render: (text, record) => (
-        <Link to={"/dashboard/barber/barberDetails"}>
+        <Link to={`/dashboard/barber/barberDetails/${record?.barberId}`}>
           <div className="flex items-center gap-2">
             <img
               src={record.barberImage || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"}
@@ -60,9 +60,9 @@ export const Barber = () => {
   const tableData = barberData?.data || [];
 
   return (
-    <div>
-      <div className="p-1">
-        <div className="flex justify-between">
+  
+      <div className="bg-white p-3 h-[87vh]">
+        <div className="md:flex justify-between">
           <div className="flex">
             <Navigate title={"Barbers"} />
            
@@ -71,7 +71,7 @@ export const Barber = () => {
              onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             prefix={<SearchOutlined />}
-            className="w-64 px-4 py-2 rounded-lg bg-white"
+              style={{ width: 250, height: "42px" }}
           />
         </div>
 
@@ -98,6 +98,6 @@ export const Barber = () => {
           />
         </div>
       </div>
-    </div>
+   
   );
 };
