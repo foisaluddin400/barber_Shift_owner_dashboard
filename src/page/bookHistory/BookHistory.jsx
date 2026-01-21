@@ -1,5 +1,6 @@
-import { Table, Input, Pagination, Select, DatePicker } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { Table, Input, Pagination, Select, DatePicker, Modal, Button, List, Avatar, Divider, Descriptions } from "antd";
+import { SearchOutlined, EyeOutlined } from "@ant-design/icons";
+
 import { Navigate } from "../../Navigate";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -8,21 +9,33 @@ import { useGetAllCustomerOwnerQuery } from "../redux/api/manageApi";
 const BookHistory = () => {
   const [searchTerm, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [selectedBooking, setSelectedBooking] = useState(null);
 
-  // ✅ NEW STATES
+const openModal = (record) => {
+  setSelectedBooking(record);
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setIsModalOpen(false);
+  setSelectedBooking(null);
+};
+
+  // ✅ STATES
   const [activeTab, setActiveTab] = useState("ALL");
-  const [status, setStatus] = useState('COMPLETED');
+  const [status, setStatus] = useState("COMPLETED"); // ✅ default always COMPLETED
   const [date, setDate] = useState(null);
 
   const pageSize = 10;
 
-  // ✅ API QUERY PARAMS
+  // ✅ API QUERY
   const { data: customerData } = useGetAllCustomerOwnerQuery({
     page: currentPage,
     limit: pageSize,
     searchTerm: searchTerm || undefined,
     type: activeTab !== "ALL" ? activeTab : undefined,
-    status: status || undefined,
+    status, // ✅ always comes from state
     date: activeTab === "QUEUE" ? date : undefined,
   });
 
@@ -30,75 +43,82 @@ const BookHistory = () => {
     setCurrentPage(page);
   };
 
-  const columns = [
-    {
-      title: "SI No",
-      key: "siNo",
-      render: (_, __, index) => index + 1,
-    },
+const columns = [
+  {
+    title: "SI No",
+    render: (_, __, index) => index + 1,
+  },
+  {
+    title: "Customer Name",
+    dataIndex: "customerName",
+    render: (text, record) => (
+      <div className="flex items-center gap-2">
+        <img
+          src={record.customerImage || "https://via.placeholder.com/40"}
+          className="w-8 h-8 rounded-full"
+        />
+        <span>{text}</span>
+      </div>
+    ),
+  },
+  {
+    title: "Barber Name",
+    dataIndex: "barberName",
+    render: (text, record) => (
+      <div className="flex items-center gap-2">
+        <img
+          src={record.barberImage || "https://via.placeholder.com/40"}
+          className="w-8 h-8 rounded-full"
+        />
+        <span>{text}</span>
+      </div>
+    ),
+  },
+  {
+    title: "Booking Date",
+    dataIndex: "bookingDate",
+    render: (date) => new Date(date).toLocaleDateString(),
+  },
+  {
+    title: "Time",
+    render: (_, record) => `${record.startTime} - ${record.endTime}`,
+  },
+  {
+    title: "Total Price",
+    dataIndex: "totalPrice",
+    render: (price) => `$${price}`,
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    render: (status) => (
+      <span
+        className={`px-2 py-1 rounded text-sm font-medium ${
+          status === "COMPLETED"
+            ? "bg-green-200 text-green-800"
+            : status === "CANCELLED"
+            ? "bg-red-200 text-red-800"
+            : "bg-gray-200 text-gray-800"
+        }`}
+      >
+        {status}
+      </span>
+    ),
+  },
+  {
+    title: "Action",
+    align: "center",
+    render: (_, record) => (
+      <Button
+        type="primary"
+        shape="circle"
+        icon={<EyeOutlined />}
+        onClick={() => openModal(record)}
+      />
+    ),
+  },
+];
 
-    {
-      title: "Customer Name",
-      dataIndex: "customerName",
-      key: "customerName",
-      render: (text, record) => (
-        <div className="flex items-center gap-2">
-          <img
-            src={record.customerImage || "https://via.placeholder.com/40"}
-            alt="avatar"
-            className="w-8 h-8 rounded-full"
-          />
-          <span>{text}</span>
-        </div>
-      ),
-    },
-    {
-      title: "Barber Name",
-      dataIndex: "barberName",
-      key: "barberName",
-      render: (text, record) => (
-        <div className="flex items-center gap-2">
-          <img
-            src={record.barberImage || "https://via.placeholder.com/40"}
-            alt="barber"
-            className="w-8 h-8 rounded-full"
-          />
-          <span>{text}</span>
-        </div>
-      ),
-    },
-   
-    {
-      title: "Booking Date",
-      dataIndex: "bookingDate",
-      key: "bookingDate",
-      render: (date) => new Date(date).toLocaleDateString(),
-    },
-    {
-      title: "Time",
-      render: (_, record) => `${record.startTime} - ${record.endTime}`,
-    },
-    {
-      title: "Total Price",
-      dataIndex: "totalPrice",
-      render: (price) => `$${price}`,
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (status) => (
-        <span
-          className={`px-2 py-1 rounded ${
-            status === "CONFIRMED"
-              ? "bg-green-200 text-green-800"
-              : "bg-gray-200 text-gray-800"
-          }`}
-        >
-          {status}
-        </span>
-      ),
-    },
-  ];
 
   const tableData = customerData?.data || [];
 
@@ -106,10 +126,7 @@ const BookHistory = () => {
     <div className="bg-white p-3 h-[87vh]">
       {/* HEADER */}
       <div className="md:flex justify-between items-center">
-        <div className="flex items-center">
-          <Navigate title="Previous Bookings" />
-          
-        </div>
+        <Navigate title="Previous Bookings" />
 
         {/* FILTERS */}
         <div className="flex gap-4 items-center">
@@ -121,26 +138,24 @@ const BookHistory = () => {
             />
           )}
 
-          {/* Status Select */}
+          {/* STATUS SELECT */}
           <Select
             value={status}
-            onChange={(value) => setStatus(value || null)}
-          
-            placeholder="Status"
-            style={{ width: 150, height: "42px" }}
+            onChange={(value) => setStatus(value)}
+            style={{ width: 160, height: 42 }}
             options={[
               { value: "COMPLETED", label: "Completed" },
               { value: "CANCELLED", label: "Cancelled" },
               { value: "NO_SHOW", label: "No Show" },
-            
             ]}
           />
 
+          {/* SEARCH */}
           <Input
-            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
             prefix={<SearchOutlined />}
-              style={{ width: 150, height: "42px" }}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ width: 160, height: 42 }}
           />
         </div>
       </div>
@@ -152,11 +167,12 @@ const BookHistory = () => {
             key={tab}
             onClick={() => {
               setActiveTab(tab);
-              setStatus(null);
-              setDate(null);
+              setDate(null); // ✅ only date reset
             }}
             className={`px-4 py-2 rounded ${
-              activeTab === tab ? "bg-[#D17C51] text-white" : "bg-gray-200"
+              activeTab === tab
+                ? "bg-[#D17C51] text-white"
+                : "bg-gray-200"
             }`}
           >
             {tab}
@@ -165,13 +181,12 @@ const BookHistory = () => {
       </div>
 
       {/* TABLE */}
-      <div className="mt-4 rounded-md overflow-hidden">
+      <div className="mt-4">
         <Table
           columns={columns}
           dataSource={tableData}
           rowKey="bookingId"
           pagination={false}
-          rowClassName="border-b border-gray-300"
           scroll={{ x: 800 }}
         />
       </div>
@@ -186,6 +201,86 @@ const BookHistory = () => {
           showSizeChanger={false}
         />
       </div>
+      <Modal
+  title="Booking Details"
+  open={isModalOpen}
+  onCancel={closeModal}
+  footer={null}
+  width={720}
+>
+  {selectedBooking && (
+    <>
+      {/* CUSTOMER & BARBER */}
+      <div className="flex justify-between gap-6">
+        <div className="flex items-center gap-3">
+          <Avatar size={64} src={selectedBooking.customerImage} />
+          <div>
+            <p className="font-semibold">{selectedBooking.customerName}</p>
+            <p className="text-sm text-gray-500">{selectedBooking.customerEmail}</p>
+            <p className="text-sm text-gray-500">{selectedBooking.customerPhone}</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Avatar size={64} src={selectedBooking.barberImage} />
+          <div>
+            <p className="font-semibold">{selectedBooking.barberName}</p>
+            <p className="text-sm text-gray-500">Barber</p>
+          </div>
+        </div>
+      </div>
+
+      <Divider />
+
+      {/* BOOKING INFO */}
+      <Descriptions bordered size="small" column={2}>
+        <Descriptions.Item label="Booking Type">
+          {selectedBooking.bookingType}
+        </Descriptions.Item>
+        <Descriptions.Item label="Status">
+          {selectedBooking.status}
+        </Descriptions.Item>
+        <Descriptions.Item label="Date">
+          {new Date(selectedBooking.bookingDate).toLocaleDateString()}
+        </Descriptions.Item>
+        <Descriptions.Item label="Time">
+          {selectedBooking.startTime} - {selectedBooking.endTime}
+        </Descriptions.Item>
+        <Descriptions.Item label="Total Price" span={2}>
+          ${selectedBooking.totalPrice}
+        </Descriptions.Item>
+        {selectedBooking.notes && (
+          <Descriptions.Item label="Notes" span={2}>
+            {selectedBooking.notes}
+          </Descriptions.Item>
+        )}
+      </Descriptions>
+
+      <Divider />
+
+      {/* SERVICES */}
+      <h3 className="font-semibold mb-2">Services</h3>
+      <List
+        bordered
+        dataSource={selectedBooking.services}
+        renderItem={(service) => (
+          <List.Item>
+            <div className="flex justify-between w-full">
+              <div>
+                <p className="font-medium">{service.serviceName}</p>
+                <p className="text-sm text-gray-500">
+                  Available To: {service.availableTo}
+                </p>
+              </div>
+              <p className="font-semibold">${service.price}</p>
+            </div>
+          </List.Item>
+        )}
+      />
+    </>
+  )}
+</Modal>
+
     </div>
   );
 };
